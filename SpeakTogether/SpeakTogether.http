@@ -1,0 +1,6 @@
+@SpeakTogether_HostAddress = http://localhost:5272
+
+GET {{SpeakTogether_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
