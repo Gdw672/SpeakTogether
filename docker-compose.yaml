@@ -1,0 +1,21 @@
+services:
+  postgre:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    volumes:
+      - pgdata_speaktogether:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: speakTogether
+    ports:
+      - "5433:5432"
+    networks:
+      - speakTogetherNetwork
+        
+volumes:
+  pgdata:
+
+networks:
+  speakTogetherNetwork:
+    driver: bridge
