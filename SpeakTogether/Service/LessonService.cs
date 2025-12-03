@@ -7,26 +7,37 @@ using SpeakTogether.Service.Interface;
 
 namespace SpeakTogether.Service
 {
-    public class CreateLessonService : ICreateLessonService
+    public class LessonService : ILessonService
     {
         private ISpeakTogetherDbContext speakTogetherDbContext;
 
-        public CreateLessonService(ISpeakTogetherDbContext speakTogetherDbContext) 
+        public LessonService(ISpeakTogetherDbContext speakTogetherDbContext) 
         { 
           this.speakTogetherDbContext = speakTogetherDbContext;
         }
-        public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel)
+        public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId)
         {
             var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
 
             var lessons = speakTogetherDbContext.GetLessons();
-            var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc);
+            var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc, CreatorId);
 
             lessons.Add(lesson);
             speakTogetherDbContext.SaveChanges();
 
             return lesson;
+        }
+
+        public Lesson DeleteLesson(int Id)
+        {
+            var lessons = speakTogetherDbContext.GetLessons();
+
+            var lessonToDelete = lessons.Where(lesson => lesson.Id == Id).First();
+
+            lessons.Remove(lessonToDelete);
+            speakTogetherDbContext.SaveChanges();
+            return lessonToDelete;
         }
     }
 }

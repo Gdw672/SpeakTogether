@@ -9,16 +9,22 @@ namespace SpeakTogether.Controllers
     [Route("[controller]")]
     public class LessonController : ControllerBase
     {
-        private ICreateLessonService createLessonService;
-        public LessonController(ICreateLessonService createLessonService)
+        private ILessonService lessonService;
+        public LessonController(ILessonService lessonService)
         {
-         this.createLessonService = createLessonService;
+         this.lessonService = lessonService;
         }
 
         [HttpPost]
-        public IActionResult CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel)
+        public IActionResult CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId)
         {
-           return Ok(createLessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel));
+           return Ok(lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteLesson(int id)
+        {
+            return Ok(lessonService.DeleteLesson(id));
         }
     }
 }

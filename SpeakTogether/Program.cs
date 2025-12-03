@@ -18,8 +18,8 @@ builder.Services.AddDbContext<SpeakTogetherDbContext>(options =>
 builder.Services.AddScoped<ISpeakTogetherDbContext>(provider =>
     provider.GetRequiredService<SpeakTogetherDbContext>());
 
-builder.Services.AddScoped<ICreateLessonService, CreateLessonService>();
-
+builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

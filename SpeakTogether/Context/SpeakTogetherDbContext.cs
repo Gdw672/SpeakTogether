@@ -12,6 +12,14 @@ namespace SpeakTogether.Context
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Lesson>()
+              .HasOne(l => l.LessonCreator)   
+              .WithMany(u => u.Lessons)
+              .HasForeignKey(l => l.CreatorId)
+              .OnDelete(DeleteBehavior.Restrict);
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
 

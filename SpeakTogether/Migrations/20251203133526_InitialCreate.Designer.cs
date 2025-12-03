@@ -12,8 +12,8 @@ using SpeakTogether.Context;
 namespace SpeakTogether.Migrations
 {
     [DbContext(typeof(SpeakTogetherDbContext))]
-    [Migration("20251126135422_addLangLevelToLesson")]
-    partial class addLangLevelToLesson
+    [Migration("20251203133526_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace SpeakTogether.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -52,14 +55,18 @@ namespace SpeakTogether.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("SpeakTogether.Models.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -76,9 +83,28 @@ namespace SpeakTogether.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("RegistrationDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SpeakTogether.Models.Lesson", b =>
+                {
+                    b.HasOne("SpeakTogether.Models.User", "LessonCreator")
+                        .WithMany("Lessons")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LessonCreator");
+                });
+
+            modelBuilder.Entity("SpeakTogether.Models.User", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 #pragma warning restore 612, 618
         }

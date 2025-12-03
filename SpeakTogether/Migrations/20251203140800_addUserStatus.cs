@@ -5,14 +5,14 @@
 namespace SpeakTogether.Migrations
 {
     /// <inheritdoc />
-    public partial class addLangLevelToLesson : Migration
+    public partial class addUserStatus : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "LangLevel",
-                table: "Lessons",
+                name: "UserStatus",
+                table: "Users",
                 type: "integer",
                 nullable: false,
                 defaultValue: 0);
@@ -22,8 +22,8 @@ namespace SpeakTogether.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "LangLevel",
-                table: "Lessons");
+                name: "UserStatus",
+                table: "Users");
         }
     }
 }
