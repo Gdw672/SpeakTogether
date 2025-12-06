@@ -19,9 +19,12 @@ namespace SpeakTogether.Context
               .WithMany(u => u.Lessons)
               .HasForeignKey(l => l.CreatorId)
               .OnDelete(DeleteBehavior.Restrict);
+
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Material> Materials { get; set; }
+
 
         public DbSet<Lesson> GetLessons()
         {
@@ -31,6 +34,11 @@ namespace SpeakTogether.Context
         public DbSet<User> GetUsers()
         {
             return Users;
+        }
+
+        public DbSet<Material> GetMaterials()
+        {
+            return Materials;
         }
 
         public void SaveChanges()

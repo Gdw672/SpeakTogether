@@ -7,6 +7,7 @@ namespace SpeakTogether.Service.Interface
     public interface ILessonService
     {
         public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId);
+        public Task<Lesson> CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile file);
         public Lesson DeleteLesson(int Id);
     }
 }

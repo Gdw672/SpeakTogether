@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using SpeakTogether.Context;
 using SpeakTogether.Context.Interface;
 using SpeakTogether.Service;
+using SpeakTogether.Service.FileStorage;
+using SpeakTogether.Service.FileStorage.Interface;
 using SpeakTogether.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,9 @@ builder.Services.AddScoped<ISpeakTogetherDbContext>(provider =>
 
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFileStorage, LocalMaterialStorageService>();
+
+
 
 var app = builder.Build();
 

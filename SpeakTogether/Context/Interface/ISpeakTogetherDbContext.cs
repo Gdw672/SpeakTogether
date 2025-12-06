@@ -7,6 +7,7 @@ namespace SpeakTogether.Context.Interface
     {
         public DbSet<User> GetUsers();
         public DbSet<Lesson> GetLessons();
+        public DbSet<Material> GetMaterials();
         public void SaveChanges();
     }
 }

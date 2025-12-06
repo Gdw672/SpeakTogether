@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SpeakTogether.Context;
@@ -11,9 +12,11 @@ using SpeakTogether.Context;
 namespace SpeakTogether.Migrations
 {
     [DbContext(typeof(SpeakTogetherDbContext))]
-    partial class SpeakTogetherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206170815_AddRegistrationDateToUser")]
+    partial class AddRegistrationDateToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,36 +58,6 @@ namespace SpeakTogether.Migrations
                     b.HasIndex("CreatorId");
 
                     b.ToTable("Lessons");
-                });
-
-            modelBuilder.Entity("SpeakTogether.Models.Material", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("LessonId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LessonId");
-
-                    b.ToTable("Materials");
                 });
 
             modelBuilder.Entity("SpeakTogether.Models.User", b =>
@@ -130,22 +103,6 @@ namespace SpeakTogether.Migrations
                         .IsRequired();
 
                     b.Navigation("LessonCreator");
-                });
-
-            modelBuilder.Entity("SpeakTogether.Models.Material", b =>
-                {
-                    b.HasOne("SpeakTogether.Models.Lesson", "Lesson")
-                        .WithMany("Materials")
-                        .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lesson");
-                });
-
-            modelBuilder.Entity("SpeakTogether.Models.Lesson", b =>
-                {
-                    b.Navigation("Materials");
                 });
 
             modelBuilder.Entity("SpeakTogether.Models.User", b =>

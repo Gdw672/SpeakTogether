@@ -21,6 +21,14 @@ namespace SpeakTogether.Controllers
            return Ok(lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId));
         }
 
+        [HttpPost("create-with-materials")]
+        public async Task<IActionResult> CreateLessonWithMaterial(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile file)
+        {
+            Console.WriteLine(file.Name);
+
+            return Ok(await lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId, file));
+        }
+
         [HttpDelete]
         public IActionResult DeleteLesson(int id)
         {

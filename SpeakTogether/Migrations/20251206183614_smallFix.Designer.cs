@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SpeakTogether.Context;
@@ -11,9 +12,11 @@ using SpeakTogether.Context;
 namespace SpeakTogether.Migrations
 {
     [DbContext(typeof(SpeakTogetherDbContext))]
-    partial class SpeakTogetherDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206183614_smallFix")]
+    partial class smallFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
