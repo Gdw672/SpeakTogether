@@ -8,6 +8,7 @@ namespace SpeakTogether.Service.Interface
     {
         public User CreateUser(string Name, string Email, string PasswordHash, DateTime RegistrationDate, LangLevel Level);
         public User SoftDelete(int Id);
+        public bool Verify(string name, string password);
 
     }
 }

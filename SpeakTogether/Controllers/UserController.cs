@@ -12,19 +12,25 @@ namespace SpeakTogether.Controllers
 
         public UserController(IUserService userService)
         {
-                this.UserService = userService;
+             this.UserService = userService;
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser(string Name, string Email, string PasswordHash, DateTime RegistrationDate, LangLevel Level)
+        public IActionResult CreateUser(string Name, string Email, string Password, DateTime RegistrationDate, LangLevel Level)
         {
-           return Ok(UserService.CreateUser(Name, Email, PasswordHash, RegistrationDate, Level));
+           return Ok(UserService.CreateUser(Name, Email, Password, RegistrationDate, Level));
         }
 
         [HttpPost("soft-delete/{id}")]
         public IActionResult SoftDeleteUser(int id)
         {
             return Ok(UserService.SoftDelete(id));
+        }
+
+        [HttpPost("verify-password")]
+        public IActionResult VerifyPassword(string username, string password)
+        {
+            return Ok(UserService.Verify(username, password));
         }
     }
 }
