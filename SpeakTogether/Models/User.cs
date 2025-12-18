@@ -1,4 +1,5 @@
 ﻿using SpeakTogether.Enums;
+using SpeakTogether.Models;
 
 namespace SpeakTogether.Models
 {
@@ -21,7 +22,7 @@ namespace SpeakTogether.Models
         public string PasswordHash { get; set; }
         public DateTime RegistrationDate { get; set; }
         public LangLevel Level { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
+        public ICollection<LessonParticipant> LessonParticipants { get; set; } = new List<LessonParticipant>();
         public UserStatus UserStatus { get; set; } = UserStatus.Active;
     }
 }

@@ -26,6 +26,6 @@ namespace SpeakTogether.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ICollection<Material> Materials { get; set; } = new List<Material>();
-
+        public ICollection<LessonParticipant> Participants { get; set; } = new List<LessonParticipant>();
     }
 }

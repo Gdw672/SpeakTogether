@@ -26,6 +26,7 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileStorage, LocalMaterialStorageService>();
 builder.Services.AddScoped<IPasswordHashService, Argon2HashService>();
+builder.Services.AddScoped<ILessonParticipianService, LessonParticipianService>();
 
 var app = builder.Build();
 

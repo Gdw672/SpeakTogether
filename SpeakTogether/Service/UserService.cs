@@ -27,7 +27,7 @@ namespace SpeakTogether.Service
 
             var user = new User { Name = Name, Email = Email, PasswordHash = hash, RegistrationDate = registrationDateUtc, Level = Level };
 
-            speakTogetherDbContext.GetUsers().Add(user);
+            speakTogetherDbContext.Users.Add(user);
             speakTogetherDbContext.SaveChanges();
 
             return user;
@@ -35,14 +35,14 @@ namespace SpeakTogether.Service
 
         public bool Verify(string name, string password)
         {
-           var hash = speakTogetherDbContext.GetUsers().FirstOrDefault(user => user.Name == name).PasswordHash;
+           var hash = speakTogetherDbContext.Users.FirstOrDefault(user => user.Name == name).PasswordHash;
 
            return passwordHashService.Verify(password, hash);
         }
 
         public User SoftDelete(int Id)
         {
-           var users = speakTogetherDbContext.GetUsers();
+           var users = speakTogetherDbContext.Users;
            var user = users.Where(user => user.Id == Id).FirstOrDefault();
            user.UserStatus = UserStatus.Deleted;
            speakTogetherDbContext.SaveChanges();
