@@ -29,6 +29,8 @@ namespace SpeakTogether.Controllers
             return Ok(await lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId, file));
         }
 
+        
+
         [HttpDelete]
         public IActionResult DeleteLesson(int id)
         {

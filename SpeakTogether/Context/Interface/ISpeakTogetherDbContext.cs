@@ -5,9 +5,12 @@ namespace SpeakTogether.Context.Interface
 {
     public interface ISpeakTogetherDbContext
     {
-        public DbSet<User> GetUsers();
-        public DbSet<Lesson> GetLessons();
-        public DbSet<Material> GetMaterials();
+        DbSet<User> Users { get; }
+        DbSet<Lesson> Lessons { get; }
+        DbSet<Material> Materials { get; }
+        DbSet<LessonParticipant> LessonParticipants { get; }
         public void SaveChanges();
+        Task<int> SaveChangesAsync();
+
     }
 }

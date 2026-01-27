@@ -14,16 +14,31 @@ namespace SpeakTogether.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<LessonParticipant>()
+                .HasKey(lp => new { lp.LessonId, lp.UserId });
+
+            modelBuilder.Entity<LessonParticipant>()
+                .HasOne(lp => lp.Lesson)
+                .WithMany(l => l.Participants)
+                .HasForeignKey(lp => lp.LessonId);
+
+            modelBuilder.Entity<LessonParticipant>()
+                .HasOne(lp => lp.User)
+                .WithMany(u => u.LessonParticipants)
+                .HasForeignKey(lp => lp.UserId);
+
             modelBuilder.Entity<Lesson>()
-              .HasOne(l => l.LessonCreator)   
-              .WithMany(u => u.Lessons)
-              .HasForeignKey(l => l.CreatorId)
-              .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(l => l.LessonCreator)
+                .WithMany()
+                .HasForeignKey(l => l.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Material> Materials { get; set; }
+        public DbSet<LessonParticipant> LessonParticipants { get; set; }
+
 
 
         public DbSet<Lesson> GetLessons()
@@ -41,9 +56,19 @@ namespace SpeakTogether.Context
             return Materials;
         }
 
+        public DbSet<LessonParticipant> GetLessonParticipants()
+        {
+            return LessonParticipants;
+        }
+
         public void SaveChanges()
         {
             base.SaveChanges();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+           return await base.SaveChangesAsync();
         }
     }
 }

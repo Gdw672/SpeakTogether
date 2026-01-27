@@ -25,7 +25,7 @@ namespace SpeakTogether.Service
             var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
 
-            var lessons = speakTogetherDbContext.GetLessons();
+            var lessons = speakTogetherDbContext.Lessons;
             var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc, CreatorId);
 
             lessons.Add(lesson);
@@ -54,7 +54,7 @@ namespace SpeakTogether.Service
 
             lesson.Materials.Add(material);
 
-            speakTogetherDbContext.GetLessons().Add(lesson);
+            speakTogetherDbContext.Lessons.Add(lesson);
 
             speakTogetherDbContext.SaveChanges();
 
@@ -63,7 +63,7 @@ namespace SpeakTogether.Service
 
         public Lesson DeleteLesson(int Id)
         {
-            var lessons = speakTogetherDbContext.GetLessons();
+            var lessons = speakTogetherDbContext.Lessons;
 
             var lessonToDelete = lessons.Where(lesson => lesson.Id == Id).First();
 
