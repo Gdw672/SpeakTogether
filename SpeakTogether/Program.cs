@@ -22,6 +22,7 @@ builder.Services.AddDbContext<SpeakTogetherDbContext>(options =>
 builder.Services.AddScoped<ISpeakTogetherDbContext>(provider =>
     provider.GetRequiredService<SpeakTogetherDbContext>());
 
+builder.Services.AddHttpClient<IZoomService, ZoomService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileStorage, LocalMaterialStorageService>();

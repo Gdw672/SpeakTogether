@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SpeakTogether.Context.Interface;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
@@ -69,6 +70,11 @@ namespace SpeakTogether.Service
             lessons.Remove(lessonToDelete);
             speakTogetherDbContext.SaveChanges();
             return lessonToDelete;
+        }
+        public async Task<Lesson?> FindByIdAsync(int id)
+        {
+            var lessons = speakTogetherDbContext.GetLessons();
+            return await lessons.FirstOrDefaultAsync(lesson => lesson.Id == id);
         }
     }
 }
