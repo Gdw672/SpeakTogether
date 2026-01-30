@@ -1,4 +1,5 @@
-﻿using SpeakTogether.Service.Interface;
+﻿using SpeakTogether.Models.DTOs;
+using SpeakTogether.Service.Interface;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -11,18 +12,16 @@ namespace SpeakTogether.Service
     public class ZoomService : IZoomService
     {
         private readonly HttpClient httpClient;
-        private readonly string clientId = "";
-        private readonly string clientSecret = "";
-        private readonly string accountId = "";
+        private readonly string clientId = "E2632ahoRky2OSVaWRFmHg";
+        private readonly string clientSecret = "N4NxXfgEc8gF55k8eGmHJ86OLVUhX7Rp";
+        private readonly string accountId = "RU_Cr4d8QmWIGTZGMIS3iw";
         private string accessToken;
         private DateTime tokenExpiry;
 
-        private readonly ILessonService lessonService;
 
-        public ZoomService(HttpClient httpClient, ILessonService lessonService)
+        public ZoomService(HttpClient httpClient)
         {
             this.httpClient = httpClient;
-            this.lessonService = lessonService;
         }
 
         private async Task<string> GetAccessTokenAsync()
@@ -46,17 +45,16 @@ namespace SpeakTogether.Service
             return accessToken;
         }
 
-        public async Task<string> CreateConferenceAsync(int lessonId)
+        public async Task<ZoomLinksDTO> CreateConferenceAsync(LessonDTO lessonDTO)
         {
             var token = await GetAccessTokenAsync();
-            var lesson = await lessonService.FindByIdAsync(lessonId);
-            var duration = GetLessonDurationMinutes(lesson.StartDate, lesson.EndDate);
+            var duration = GetLessonDurationMinutes(lessonDTO.StartDate, lessonDTO.EndDate);
 
             var body = new
             {
-                topic = lesson.Name,
+                topic = lessonDTO.Name,
                 type = 2,
-                start_time = lesson.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                start_time = lessonDTO.StartDate.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 duration = duration,
                 timezone = "Europe/Riga",
                 settings = new
@@ -76,7 +74,16 @@ namespace SpeakTogether.Service
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
-            return json; 
+
+            using var doc = JsonDocument.Parse(json);
+            var startUrl = doc.RootElement.GetProperty("start_url").GetString();
+            var joinUrl = doc.RootElement.GetProperty("join_url").GetString();
+
+            return new ZoomLinksDTO
+            {
+                StartUrl = startUrl,
+                JoinUrl = joinUrl
+            };
         }
 
         private int GetLessonDurationMinutes(DateTime startDate, DateTime endDate)

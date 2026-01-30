@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SpeakTogether.Context.Interface;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
+using SpeakTogether.Models.DTOs;
 using SpeakTogether.Service.FileStorage.Interface;
 using SpeakTogether.Service.Interface;
 
@@ -14,11 +15,12 @@ namespace SpeakTogether.Service
         private ISpeakTogetherDbContext speakTogetherDbContext;
         private IFileStorage fileStorageService;
 
-
-        public LessonService(ISpeakTogetherDbContext speakTogetherDbContext, IFileStorage fileStorage) 
+        private IZoomService zoomService;
+        public LessonService(ISpeakTogetherDbContext speakTogetherDbContext, IFileStorage fileStorage, IZoomService zoomService) 
         { 
           this.speakTogetherDbContext = speakTogetherDbContext;
           this.fileStorageService = fileStorage;  
+          this.zoomService = zoomService;
         }
         public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId)
         {
@@ -48,9 +50,41 @@ namespace SpeakTogether.Service
             var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
 
+
             var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc, CreatorId);
 
             var material = new Material(file.FileName, path, file.ContentType);
+
+            lesson.Materials.Add(material);
+
+            speakTogetherDbContext.Lessons.Add(lesson);
+
+            speakTogetherDbContext.SaveChanges();
+
+            return lesson;
+        }
+
+        public async Task<Lesson> CreateLessonWithDTO(
+    string Name,
+    string Description,
+    DateTime StartDate,
+    DateTime EndDate,
+    LangLevel langLevel,
+    int CreatorId,
+    IFormFile file)
+        {
+            var path = await fileStorageService.SaveFileAsync(file);
+
+            var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
+            var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
+
+            var lessonDTO = new LessonDTO(CreatorId, Name, Description, langLevel, startDateUtc, endDateUtc);
+
+            var links = await zoomService.CreateConferenceAsync(lessonDTO);
+
+            var material = new Material(file.FileName, path, file.ContentType);
+
+            var lesson = new Lesson(lessonDTO, CreatorId, links);
 
             lesson.Materials.Add(material);
 
@@ -73,7 +107,7 @@ namespace SpeakTogether.Service
         }
         public async Task<Lesson?> FindByIdAsync(int id)
         {
-            var lessons = speakTogetherDbContext.GetLessons();
+            var lessons = speakTogetherDbContext.Lessons;
             return await lessons.FirstOrDefaultAsync(lesson => lesson.Id == id);
         }
     }

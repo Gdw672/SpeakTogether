@@ -26,10 +26,8 @@ namespace SpeakTogether.Controllers
         {
             Console.WriteLine(file.Name);
 
-            return Ok(await lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId, file));
+            return Ok(await lessonService.CreateLessonWithDTO(Name, Description, StartDate, EndDate, langLevel, CreatorId, file));
         }
-
-        
 
         [HttpDelete]
         public IActionResult DeleteLesson(int id)

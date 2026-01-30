@@ -1,6 +1,7 @@
-﻿using SpeakTogether.Enums;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using SpeakTogether.Enums;
 using System.Text.Json.Serialization;
-
+using SpeakTogether.Models.DTOs;
 namespace SpeakTogether.Models
 {
     public class Lesson
@@ -15,6 +16,17 @@ namespace SpeakTogether.Models
             this.EndDate = EndDate;
             this.CreatorId = CreatorId;
         }
+        public Lesson(LessonDTO lessonDTO, int CreatorId, ZoomLinksDTO zoomLinksDTO)
+        {
+            this.Name = lessonDTO.Name;
+            this.Description = lessonDTO.Description;
+            this.LangLevel= lessonDTO.LangLevel;
+            this.StartDate = lessonDTO.StartDate;
+            this.EndDate = lessonDTO.EndDate;
+            this.CreatorId = CreatorId;
+            this.ZoomJoinUrl = zoomLinksDTO.JoinUrl;
+            this.ZoomStartUrl = zoomLinksDTO.StartUrl;
+        }
 
         public int  Id { get; set; }
         public int  CreatorId { get; set; }
@@ -25,6 +37,8 @@ namespace SpeakTogether.Models
         public LangLevel LangLevel { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public string ZoomStartUrl { get; set; }
+        public string ZoomJoinUrl { get; set; }
         public ICollection<Material> Materials { get; set; } = new List<Material>();
         public ICollection<LessonParticipant> Participants { get; set; } = new List<LessonParticipant>();
     }

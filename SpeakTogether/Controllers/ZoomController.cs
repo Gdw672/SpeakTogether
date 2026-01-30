@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpeakTogether.Service;
 using SpeakTogether.Service.Interface;
+using SpeakTogether.Models.DTOs;
 
 namespace SpeakTogether.Controllers
 {
@@ -15,9 +16,9 @@ namespace SpeakTogether.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateMeeting(int lessonId)
+        public async Task<IActionResult> CreateMeeting(LessonDTO lessonDTO)
         {
-            var result = await zoomService.CreateConferenceAsync(lessonId);
+            var result = await zoomService.CreateConferenceAsync(lessonDTO);
             return Ok(result);
         }
     }
