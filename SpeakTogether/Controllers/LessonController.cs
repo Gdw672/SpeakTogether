@@ -2,6 +2,7 @@
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
 using SpeakTogether.Service.Interface;
+using System.Threading.Tasks;
 
 namespace SpeakTogether.Controllers
 {
@@ -15,13 +16,7 @@ namespace SpeakTogether.Controllers
          this.lessonService = lessonService;
         }
 
-        [HttpPost]
-        public IActionResult CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId)
-        {
-           return Ok(lessonService.CreateLesson(Name, Description, StartDate, EndDate, langLevel, CreatorId));
-        }
-
-        [HttpPost("create-with-materials")]
+        [HttpPost("create-with-materials-dto")]
         public async Task<IActionResult> CreateLessonWithMaterial(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile file)
         {
             Console.WriteLine(file.Name);

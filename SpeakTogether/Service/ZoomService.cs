@@ -12,16 +12,20 @@ namespace SpeakTogether.Service
     public class ZoomService : IZoomService
     {
         private readonly HttpClient httpClient;
-        private readonly string clientId = "E2632ahoRky2OSVaWRFmHg";
-        private readonly string clientSecret = "N4NxXfgEc8gF55k8eGmHJ86OLVUhX7Rp";
-        private readonly string accountId = "RU_Cr4d8QmWIGTZGMIS3iw";
+        private readonly string clientId;
+        private readonly string clientSecret;
+        private readonly string accountId;
         private string accessToken;
         private DateTime tokenExpiry;
 
 
-        public ZoomService(HttpClient httpClient)
+        public ZoomService(HttpClient httpClient, IConfiguration config)
         {
             this.httpClient = httpClient;
+
+            clientId = config["Zoom:ClientId"];
+            clientSecret = config["Zoom:ClientSecret"];
+            accountId = config["Zoom:AccountId"];
         }
 
         private async Task<string> GetAccessTokenAsync()

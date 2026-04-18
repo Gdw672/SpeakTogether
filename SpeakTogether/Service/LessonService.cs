@@ -71,10 +71,8 @@ namespace SpeakTogether.Service
     DateTime EndDate,
     LangLevel langLevel,
     int CreatorId,
-    IFormFile file)
+    IFormFile? file = null)
         {
-            var path = await fileStorageService.SaveFileAsync(file);
-
             var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
 
@@ -82,11 +80,14 @@ namespace SpeakTogether.Service
 
             var links = await zoomService.CreateConferenceAsync(lessonDTO);
 
-            var material = new Material(file.FileName, path, file.ContentType);
-
             var lesson = new Lesson(lessonDTO, CreatorId, links);
 
-            lesson.Materials.Add(material);
+            if (file != null)
+            {
+                var path = await fileStorageService.SaveFileAsync(file);
+                var material = new Material(file.FileName, path, file.ContentType);
+                lesson.Materials.Add(material);
+            }
 
             speakTogetherDbContext.Lessons.Add(lesson);
 
