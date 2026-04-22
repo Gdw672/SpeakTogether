@@ -5,6 +5,11 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpeakTogether", "SpeakTogether\SpeakTogether.csproj", "{D1DC6664-0071-45B1-AE84-1E9FC8BCCCF2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74C6139D-24B9-41EF-B8B4-6F3068E53BCD}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
+EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "speak-together-front", "speak-together-front\", "{C57E348C-1094-4E2E-9FF8-290AF263A39D}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
@@ -24,11 +29,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "speak-together-front", "spe
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "58845"
 		SlnRelativePath = "speak-together-front\"
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74C6139D-24B9-41EF-B8B4-6F3068E53BCD}"
-	ProjectSection(SolutionItems) = preProject
-		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
 EndProject
 Global
