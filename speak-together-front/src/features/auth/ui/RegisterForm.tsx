@@ -1,22 +1,37 @@
 ﻿import { useState } from "react"
+import { registerRequest } from "../api/AuthApi";
 
 export const RegisterForm = () => {
     const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [message, setMessage] = useState("")
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log({ email, password })
+
+        const res = await registerRequest({ username, email, password })
+
+        setMessage(res.message)
+
+        console.log(res)
     }
 
     return (
         <form onSubmit={handleSubmit} style={styles.form}>
-            <h2>Регистрация</h2>
+            <h2 style={styles.title}>Register</h2>
 
             <input
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                style={styles.input}
+            />
+
+            <input
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 style={styles.input}
             />
 
@@ -29,6 +44,9 @@ export const RegisterForm = () => {
             />
 
             <button style={styles.button}>Создать аккаунт</button>
+
+            {message && <p>{message}</p>}
+
         </form>
     )
 }
@@ -48,5 +66,10 @@ const styles = {
         background: "#16a34a",
         color: "white",
         cursor: "pointer",
+    },
+
+    title: {
+        color: "#0f0e0c",
+        textAlign: "center",
     },
 } as const

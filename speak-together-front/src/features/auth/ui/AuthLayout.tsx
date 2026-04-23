@@ -35,5 +35,6 @@ const styles: Record<string, React.CSSProperties> = {
         marginBottom: 20,
         fontSize: 20,
         fontWeight: 600,
+        color: "#0f0e0c",
     },
 }

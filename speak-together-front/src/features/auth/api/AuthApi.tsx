@@ -1,6 +1,20 @@
 ﻿import axios from 'axios';
+import type { LoginData } from '../AuthTypes';
+import type { RegisterData } from '../AuthTypes';
+
 
 export const loginRequest = async (data: LoginData) => {
-    const response = await axios.post('https://api.vash-site.com/auth/login', data);
-    return response.data;
-};
+    const response = await axios.post(
+        "https://localhost:7173/user/verify-password",
+        data
+    )
+    return response.data
+}
+
+export const registerRequest = async (data: RegisterData) => {
+    const response = await axios.post(
+        "https://localhost:7173/user/create",
+        data
+    )
+    return response.data
+}

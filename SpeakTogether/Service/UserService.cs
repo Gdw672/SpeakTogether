@@ -6,6 +6,7 @@ using SpeakTogether.Models;
 using SpeakTogether.Service.Interface;
 using SpeakTogether.Service.PasswordHasher.Interface;
 using System.Diagnostics.Eventing.Reader;
+using System.Reflection.Emit;
 
 namespace SpeakTogether.Service
 {
@@ -19,13 +20,21 @@ namespace SpeakTogether.Service
           this.passwordHashService = passwordHashService;
         }
 
-        public User CreateUser(string Name, string Email, string Password, DateTime RegistrationDate, LangLevel Level)
+        public User CreateUser(string Name, string Email, string Password, DateTime RegistrationDate, LangLevel? Level = null)
         {
-            var registrationDateUtc = DateTime.SpecifyKind(RegistrationDate, DateTimeKind.Utc);
+            var existingUser = speakTogetherDbContext.Users.FirstOrDefault(u => u.Email == Email);
 
-            var hash = passwordHashService.Hash(Password);
+            if (existingUser != null)
+                return null;
 
-            var user = new User { Name = Name, Email = Email, PasswordHash = hash, RegistrationDate = registrationDateUtc, Level = Level };
+            var user = new User
+            {
+                Name = Name,
+                Email = Email,
+                PasswordHash = passwordHashService.Hash(Password),
+                RegistrationDate = DateTime.SpecifyKind(RegistrationDate, DateTimeKind.Utc),
+                Level = Level ?? LangLevel.Elementary
+            };
 
             speakTogetherDbContext.Users.Add(user);
             speakTogetherDbContext.SaveChanges();
@@ -33,11 +42,14 @@ namespace SpeakTogether.Service
             return user;
         }
 
-        public bool Verify(string name, string password)
+        public bool Verify(string email, string password)
         {
-           var hash = speakTogetherDbContext.Users.FirstOrDefault(user => user.Name == name).PasswordHash;
+           var user = speakTogetherDbContext.Users.FirstOrDefault(user => user.Email == email);
 
-           return passwordHashService.Verify(password, hash);
+            if (user == null)
+                return false;
+
+            return passwordHashService.Verify(password, user.PasswordHash);
         }
 
         public User SoftDelete(int Id)

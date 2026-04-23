@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SpeakTogether.Enums;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
+using SpeakTogether.Models.DTOs;
+using SpeakTogether.Models.DTOs.login;
 using SpeakTogether.Service.Interface;
 
 namespace SpeakTogether.Controllers
@@ -16,9 +18,23 @@ namespace SpeakTogether.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser(string Name, string Email, string Password, DateTime RegistrationDate, LangLevel Level)
+        public IActionResult CreateUser([FromBody] Models.DTOs.register.RegisterRequest request)
+
         {
-           return Ok(UserService.CreateUser(Name, Email, Password, RegistrationDate, Level));
+            var result = UserService.CreateUser(request.Username, request.Email, request.Password, DateTime.Now);
+
+            if (result == null)
+                return Conflict(new RegisterResponse
+                {
+                    Success = false,
+                    Message = "Register is not successeful"
+                });
+                   
+            return Created("", new RegisterResponse
+            {
+                Success = true,
+                Message = "User has created!"
+            });
         }
 
         [HttpPost("soft-delete/{id}")]
@@ -28,9 +44,24 @@ namespace SpeakTogether.Controllers
         }
 
         [HttpPost("verify-password")]
-        public IActionResult VerifyPassword(string username, string password)
+        public IActionResult VerifyPassword([FromBody] Models.DTOs.login.LoginRequest request)
         {
-            return Ok(UserService.Verify(username, password));
+            var result = UserService.Verify(request.Email, request.Password);
+
+            if (!result)
+            {
+                return Unauthorized(new LoginResponse
+                {
+                    Success = false,
+                    Message = "Wrong email or password"
+                });
+            }
+
+            return Ok(new LoginResponse
+            {
+                Success = true,
+                Message = "Login successful"
+            });
         }
     }
 }

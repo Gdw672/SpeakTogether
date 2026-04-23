@@ -1,17 +1,28 @@
 ﻿import { useState } from "react"
+import { loginRequest } from "../api/AuthApi";
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [message, setMessage] = useState("")
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        console.log({ email, password })
+
+        try {
+            const res = await loginRequest({ email, password })
+
+            if (res.success) {
+                setMessage(res.message)
+            }
+        } catch {
+            setMessage("User is not exist or wrong password")
+        }
     }
 
     return (
         <form onSubmit={handleSubmit} style={styles.form}>
-            <h2>Вход</h2>
+            <h2 style={styles.title}>Login</h2>
 
             <input
                 placeholder="Email"
@@ -22,13 +33,17 @@ export const LoginForm = () => {
 
             <input
                 type="password"
-                placeholder="Пароль"
+                placeholder="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={styles.input}
             />
 
-            <button style={styles.button}>Войти</button>
+            <button type="submit" style={styles.button}>
+                Войти
+            </button>
+
+            {message && <p>{message}</p>}
         </form>
     )
 }
@@ -48,5 +63,9 @@ const styles: Record<string, React.CSSProperties> = {
         background: "#2563eb",
         color: "white",
         cursor: "pointer",
+    },
+    title: {
+        color: "#0f0e0c",
+        textAlign: "center",
     },
 }
