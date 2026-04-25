@@ -33,6 +33,9 @@ namespace SpeakTogether.Context
                 .HasForeignKey(l => l.CreatorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<UserLanguage>()
+                .HasIndex(ul => new { ul.UserId, ul.Language })
+                .IsUnique();
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }

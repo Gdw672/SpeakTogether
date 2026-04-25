@@ -1,5 +1,6 @@
 ﻿import { useState } from "react"
 import { loginRequest } from "../api/AuthApi";
+import { Link } from "react-router-dom";
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("")
@@ -39,8 +40,17 @@ export const LoginForm = () => {
                 style={styles.input}
             />
 
+            {message && <p>{message}</p>}
+
+            <p style={styles.registerText}>
+                Don’t have an account yet?{" "}
+                <Link to="/register" style={styles.link}>
+                    Sign up
+                </Link>
+            </p>
+
             <button type="submit" style={styles.button}>
-                Войти
+                Log In
             </button>
 
             {message && <p>{message}</p>}
@@ -68,4 +78,17 @@ const styles: Record<string, React.CSSProperties> = {
         color: "#0f0e0c",
         textAlign: "center",
     },
+
+    registerText: {
+        marginTop: 12,
+        textAlign: "center",
+        fontSize: 14,
+        color: "#666",
+    },
+    link: {
+        color: "#2563eb",
+        textDecoration: "none",
+        fontWeight: 500,
+        cursor: "pointer",
+    }
 }

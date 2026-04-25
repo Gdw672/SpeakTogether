@@ -20,7 +20,7 @@ namespace SpeakTogether.Service
           this.passwordHashService = passwordHashService;
         }
 
-        public User CreateUser(string Name, string Email, string Password, DateTime RegistrationDate, LangLevel? Level = null)
+        public User CreateUser(string Name, string Email, string Password, DateTime RegistrationDate)
         {
             var existingUser = speakTogetherDbContext.Users.FirstOrDefault(u => u.Email == Email);
 
@@ -33,7 +33,6 @@ namespace SpeakTogether.Service
                 Email = Email,
                 PasswordHash = passwordHashService.Hash(Password),
                 RegistrationDate = DateTime.SpecifyKind(RegistrationDate, DateTimeKind.Utc),
-                Level = Level ?? LangLevel.Elementary
             };
 
             speakTogetherDbContext.Users.Add(user);

@@ -1,5 +1,7 @@
 ﻿import { useState } from "react"
 import { registerRequest } from "../api/AuthApi";
+import { Link } from "react-router-dom";
+
 
 export const RegisterForm = () => {
     const [email, setEmail] = useState("")
@@ -43,7 +45,16 @@ export const RegisterForm = () => {
                 style={styles.input}
             />
 
-            <button style={styles.button}>Создать аккаунт</button>
+            {message && <p>{message}</p>}
+
+            <p style={styles.loginText}>
+                Already have an account?{" "}
+                <Link to="/" style={styles.link}>
+                    Sign In
+                </Link>
+            </p>
+
+            <button style={styles.button}>Sigh Up</button>
 
             {message && <p>{message}</p>}
 
@@ -72,4 +83,17 @@ const styles = {
         color: "#0f0e0c",
         textAlign: "center",
     },
+
+    loginText: {
+        marginTop: 12,
+        textAlign: "center",
+        fontSize: 14,
+        color: "#666",
+    },
+    link: {
+        color: "#2563eb",
+        textDecoration: "none",
+        fontWeight: 500,
+        cursor: "pointer",
+    }
 } as const
