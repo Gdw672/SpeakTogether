@@ -47,14 +47,14 @@ export const RegisterForm = () => {
 
             {message && <p>{message}</p>}
 
+            <button style={styles.button}>Sigh Up</button>
+
             <p style={styles.loginText}>
                 Already have an account?{" "}
                 <Link to="/" style={styles.link}>
                     Sign In
                 </Link>
             </p>
-
-            <button style={styles.button}>Sigh Up</button>
 
             {message && <p>{message}</p>}
 

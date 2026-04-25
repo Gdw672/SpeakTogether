@@ -1,11 +1,14 @@
 ﻿import { useState } from "react"
 import { loginRequest } from "../api/AuthApi";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [message, setMessage] = useState("")
+    const navigate = useNavigate()
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -13,10 +16,16 @@ export const LoginForm = () => {
         try {
             const res = await loginRequest({ email, password })
 
-            if (res.success) {
-                setMessage(res.message)
+            if (res?.token) {
+                console.log(res.token);
+                localStorage.setItem("token", res.token)
+                navigate("/select-language")
+                setMessage("Login successful")
+            } else {
+                setMessage("Invalid response from server")
             }
-        } catch {
+        } catch (err) {
+            console.log(err)
             setMessage("User is not exist or wrong password")
         }
     }
@@ -40,7 +49,9 @@ export const LoginForm = () => {
                 style={styles.input}
             />
 
-            {message && <p>{message}</p>}
+            <button type="submit" style={styles.button}>
+                Log In
+            </button>
 
             <p style={styles.registerText}>
                 Don’t have an account yet?{" "}
@@ -48,10 +59,6 @@ export const LoginForm = () => {
                     Sign up
                 </Link>
             </p>
-
-            <button type="submit" style={styles.button}>
-                Log In
-            </button>
 
             {message && <p>{message}</p>}
         </form>

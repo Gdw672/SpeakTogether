@@ -43,6 +43,27 @@ namespace SpeakTogether.Controllers
             return Ok(UserService.SoftDelete(id));
         }
 
+        [HttpPost("log-in")]
+        public async Task<IActionResult> Login([FromBody] Models.DTOs.login.LoginRequest request)
+        {
+            var result = await UserService.LoginAsync(request.Email, request.Password);
+
+            if(result == null)
+            {
+                return Unauthorized(new
+                {
+                    Message = "Wrong email or password"
+                });
+            }
+
+            return Ok(new LoginResponse
+            {
+                Token = result
+            });
+        }
+
+
+
         [HttpPost("verify-password")]
         public IActionResult VerifyPassword([FromBody] Models.DTOs.login.LoginRequest request)
         {
@@ -50,18 +71,15 @@ namespace SpeakTogether.Controllers
 
             if (!result)
             {
-                return Unauthorized(new LoginResponse
+                return Unauthorized(new
                 {
-                    Success = false,
                     Message = "Wrong email or password"
                 });
             }
 
-            return Ok(new LoginResponse
-            {
-                Success = true,
-                Message = "Login successful"
-            });
+            return Ok(
+                "Login successful"
+            );
         }
     }
 }

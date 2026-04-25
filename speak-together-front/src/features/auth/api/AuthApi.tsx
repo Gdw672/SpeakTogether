@@ -5,7 +5,7 @@ import type { RegisterData } from '../AuthTypes';
 
 export const loginRequest = async (data: LoginData) => {
     const response = await axios.post(
-        "https://localhost:7173/user/verify-password",
+        "https://localhost:7173/user/log-in",
         data
     )
     return response.data
