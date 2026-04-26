@@ -43,6 +43,13 @@ namespace SpeakTogether.Controllers
             return Ok(UserService.SoftDelete(id));
         }
 
+        [HttpPost("add-new-language")]
+        public async Task<IActionResult> AddNewLanguage()
+        {
+            return Ok();
+        }
+        
+
         [HttpPost("log-in")]
         public async Task<IActionResult> Login([FromBody] Models.DTOs.login.LoginRequest request)
         {
