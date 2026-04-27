@@ -76,7 +76,7 @@ export const SelectLanguageForm = () => {
 
     return (
         <div style={{ padding: 20, maxWidth: 400 }}>
-            <h2 style={styles.title}>Select Languages</h2>
+            <h2 style={styles.title}>Select your current language's skills</h2>
 
             <select onChange={(e) => handleAddLanguage(e.target.value)}>
                 <option value="" >Select language</option>

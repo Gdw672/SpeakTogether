@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SpeakTogether.Models.DTOs;
+using SpeakTogether.Models.DTOs.language;
 using SpeakTogether.Models.DTOs.login;
 using SpeakTogether.Service.Interface;
+using System.Security.Claims;
 
 namespace SpeakTogether.Controllers
 {
@@ -43,12 +46,26 @@ namespace SpeakTogether.Controllers
             return Ok(UserService.SoftDelete(id));
         }
 
+        [Authorize]
         [HttpPost("add-new-language")]
-        public async Task<IActionResult> AddNewLanguage()
+        public async Task<IActionResult> AddNewLanguages([FromBody] List<UserLanguageDto> languages)
+        {
+            var userId = int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier).Value
+                );
+
+            await UserService.AddLanguagesAsync(userId, languages);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("add-language-preference")] 
+        public async Task<IActionResult> AddLanguagePreferences()
         {
             return Ok();
         }
-        
+
 
         [HttpPost("log-in")]
         public async Task<IActionResult> Login([FromBody] Models.DTOs.login.LoginRequest request)

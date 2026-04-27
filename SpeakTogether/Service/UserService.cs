@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SpeakTogether.Context.Interface;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
+using SpeakTogether.Models.DTOs.language;
 using SpeakTogether.Service.Interface;
 using SpeakTogether.Service.PasswordHasher.Interface;
 using System.Diagnostics.Eventing.Reader;
@@ -85,6 +86,36 @@ namespace SpeakTogether.Service
                 return null;
 
            return jwtService.GenerateToken(user);
+        }
+
+        public async Task AddLanguagesAsync(int userId, List<UserLanguageDto> languages)
+        {
+            var user = await speakTogetherDbContext.Users.Include(u => u.Languages).FirstOrDefaultAsync(user => user.Id == userId);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            foreach (var lang in languages)
+            {
+                var existing = user.Languages
+                    .FirstOrDefault(l => l.Language == lang.Language);
+
+                if (existing != null)
+                {
+                    existing.Level = lang.Level;
+                }
+                else
+                {
+                    user.Languages.Add(new UserLanguage
+                    {
+                        UserId = userId,
+                        Language = lang.Language,
+                        Level = lang.Level
+                    });
+                }
+            }
+
+            await speakTogetherDbContext.SaveChangesAsync();
         }
     }
 }

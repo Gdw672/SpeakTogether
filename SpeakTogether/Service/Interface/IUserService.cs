@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
+using SpeakTogether.Models.DTOs.language;
 
 namespace SpeakTogether.Service.Interface
 {
@@ -12,6 +13,7 @@ namespace SpeakTogether.Service.Interface
 
         public User SoftDelete(int Id);
         public bool Verify(string email, string password);
+        public Task AddLanguagesAsync(int userId, List<UserLanguageDto> languages);
 
     }
 }

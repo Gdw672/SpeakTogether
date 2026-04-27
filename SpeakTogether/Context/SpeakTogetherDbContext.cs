@@ -36,13 +36,17 @@ namespace SpeakTogether.Context
             modelBuilder.Entity<UserLanguage>()
                 .HasIndex(ul => new { ul.UserId, ul.Language })
                 .IsUnique();
+            modelBuilder.Entity<UserLanguagePreference>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.LanguagePreferences)
+                .HasForeignKey(p => p.UserId);
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<LessonParticipant> LessonParticipants { get; set; }
-
-
+        public DbSet<UserLanguage> UserLanguages { get; set; }
+        public DbSet<UserLanguagePreference> UserLanguagePreferences { get; set; }
 
         public DbSet<Lesson> GetLessons()
         {
