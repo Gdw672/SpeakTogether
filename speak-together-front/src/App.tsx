@@ -2,7 +2,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LoginPage } from "./pages/login/LoginPage";
 import { RegisterPage } from "./pages/register/RegisterPage";
 import "./App.css"; 
-import { SelectLanguagePage } from "./pages/selet language/SelectLanguagePage";
+import { SelectLanguagePage } from "./pages/language/SelectLanguagePage";
+import { SelectLanguagePreferencesPage } from "./pages/language/SelectLanguagePreferencesPage";
+
 
 function App() {
     return (
@@ -14,6 +16,8 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
 
                 <Route path="/select-language" element={<SelectLanguagePage />} />
+
+                <Route path="/select-language-preferences" element={<SelectLanguagePreferencesPage />} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

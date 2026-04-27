@@ -61,8 +61,14 @@ namespace SpeakTogether.Controllers
 
         [Authorize]
         [HttpPost("add-language-preference")] 
-        public async Task<IActionResult> AddLanguagePreferences()
+        public async Task<IActionResult> AddLanguagePreferences([FromBody] List<UserLanguagePreferenceDto> preferences)
         {
+            var userId = int.Parse(
+                    User.FindFirst(ClaimTypes.NameIdentifier).Value
+                );
+
+            await UserService.AddPreferencesAsync(userId, preferences);
+
             return Ok();
         }
 

@@ -14,6 +14,7 @@ namespace SpeakTogether.Service.Interface
         public User SoftDelete(int Id);
         public bool Verify(string email, string password);
         public Task AddLanguagesAsync(int userId, List<UserLanguageDto> languages);
+        public Task AddPreferencesAsync(int userId, List<UserLanguagePreferenceDto> preferences);
 
     }
 }

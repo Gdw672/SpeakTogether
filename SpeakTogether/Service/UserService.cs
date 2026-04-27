@@ -117,5 +117,34 @@ namespace SpeakTogether.Service
 
             await speakTogetherDbContext.SaveChangesAsync();
         }
+
+        public async Task AddPreferencesAsync(int userId, List<UserLanguagePreferenceDto> preferences)
+        {
+            var user = await speakTogetherDbContext.Users
+                .Include(u => u.LanguagePreferences)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                throw new Exception("User not found");
+
+            // проще и чище: пересоздаём preferences
+            user.LanguagePreferences.Clear();
+
+            foreach (var pref in preferences)
+            {
+                if (pref.MinLevel > pref.MaxLevel)
+                    throw new Exception("MinLevel cannot be greater than MaxLevel");
+
+                user.LanguagePreferences.Add(new UserLanguagePreference
+                {
+                    UserId = userId,
+                    Language = pref.Language,
+                    MinLevel = pref.MinLevel,
+                    MaxLevel = pref.MaxLevel
+                });
+            }
+
+            await speakTogetherDbContext.SaveChangesAsync();
+        }
     }
 }
