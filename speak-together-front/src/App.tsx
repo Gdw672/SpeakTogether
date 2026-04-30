@@ -4,6 +4,7 @@ import { RegisterPage } from "./pages/register/RegisterPage";
 import "./App.css"; 
 import { SelectLanguagePage } from "./pages/language/SelectLanguagePage";
 import { SelectLanguagePreferencesPage } from "./pages/language/SelectLanguagePreferencesPage";
+import { MainForm } from "./features/language/ui/main/MainForm";
 
 
 function App() {
@@ -18,6 +19,9 @@ function App() {
                 <Route path="/select-language" element={<SelectLanguagePage />} />
 
                 <Route path="/select-language-preferences" element={<SelectLanguagePreferencesPage />} />
+
+                <Route path="/main" element={<MainForm />} />
+
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

@@ -2,6 +2,7 @@
 import { loginRequest } from "../api/AuthApi";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
+import { jwtDecode } from "jwt-decode";
 
 export const LoginForm = () => {
     const [email, setEmail] = useState("")
@@ -18,6 +19,7 @@ export const LoginForm = () => {
 
             if (res?.token) {
                 console.log(res.token);
+                console.log("DECODED:", jwtDecode(res.token));
                 localStorage.setItem("token", res.token)
                 navigate("/select-language")
                 setMessage("Login successful")
