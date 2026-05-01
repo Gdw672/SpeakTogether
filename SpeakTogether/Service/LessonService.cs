@@ -22,53 +22,13 @@ namespace SpeakTogether.Service
           this.fileStorageService = fileStorage;  
           this.zoomService = zoomService;
         }
-        public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId)
-        {
-            var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
-            var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
-
-            var lessons = speakTogetherDbContext.Lessons;
-            var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc, CreatorId);
-
-            lessons.Add(lesson);
-            speakTogetherDbContext.SaveChanges();
-
-            return lesson;
-        }
-
-        public async Task<Lesson> CreateLesson(
-    string Name,
-    string Description,
-    DateTime StartDate,
-    DateTime EndDate,
-    LangLevel langLevel,
-    int CreatorId,
-    IFormFile file)
-        {
-            var path = await fileStorageService.SaveFileAsync(file);
-
-            var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
-            var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
-
-
-            var lesson = new Lesson(Name, Description, langLevel, startDateUtc, endDateUtc, CreatorId);
-
-            var material = new Material(file.FileName, path, file.ContentType);
-
-            lesson.Materials.Add(material);
-
-            speakTogetherDbContext.Lessons.Add(lesson);
-
-            speakTogetherDbContext.SaveChanges();
-
-            return lesson;
-        }
 
         public async Task<Lesson> CreateLessonWithDTO(
     string Name,
     string Description,
     DateTime StartDate,
     DateTime EndDate,
+    Language language,
     LangLevel langLevel,
     int CreatorId,
     IFormFile? file = null)
@@ -76,7 +36,7 @@ namespace SpeakTogether.Service
             var startDateUtc = DateTime.SpecifyKind(StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(EndDate, DateTimeKind.Utc);
 
-            var lessonDTO = new LessonDTO(CreatorId, Name, Description, langLevel, startDateUtc, endDateUtc);
+            var lessonDTO = new LessonDTO(CreatorId, Name, Description, language, langLevel, startDateUtc, endDateUtc);
 
             var links = await zoomService.CreateConferenceAsync(lessonDTO);
 

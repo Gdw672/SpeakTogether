@@ -4,7 +4,7 @@ import { RegisterPage } from "./pages/register/RegisterPage";
 import "./App.css"; 
 import { SelectLanguagePage } from "./pages/language/SelectLanguagePage";
 import { SelectLanguagePreferencesPage } from "./pages/language/SelectLanguagePreferencesPage";
-import { MainForm } from "./features/language/ui/main/MainForm";
+import { MainPage } from "./pages/main/MainPage";
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
 
                 <Route path="/select-language-preferences" element={<SelectLanguagePreferencesPage />} />
 
-                <Route path="/main" element={<MainForm />} />
+                <Route path="/main" element={<MainPage />} />
 
 
                 <Route path="*" element={<Navigate to="/" replace />} />

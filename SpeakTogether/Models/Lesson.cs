@@ -7,10 +7,11 @@ namespace SpeakTogether.Models
     public class Lesson
     {
         public Lesson() { }
-        public Lesson(string Name, string Description, LangLevel LangLevel, DateTime StartDate, DateTime EndDate, int CreatorId) 
+        public Lesson(string Name, string Description, Language language, LangLevel LangLevel, DateTime StartDate, DateTime EndDate, int CreatorId) 
         {
             this.Name = Name;
             this.Description = Description;
+            this.Language = Language;
             this.LangLevel = LangLevel;
             this.StartDate = StartDate;
             this.EndDate = EndDate;
@@ -34,6 +35,7 @@ namespace SpeakTogether.Models
         public User LessonCreator { get; set; } 
         public string Name { get; set; }
         public string Description { get; set; }
+        public Language Language { get; set; }
         public LangLevel LangLevel { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

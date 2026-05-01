@@ -6,9 +6,7 @@ namespace SpeakTogether.Service.Interface
 {
     public interface ILessonService
     {
-        public Lesson CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId);
-        public Task<Lesson> CreateLesson(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile file);
-        Task<Lesson> CreateLessonWithDTO(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile? file = null);
+        Task<Lesson> CreateLessonWithDTO(string Name, string Description, DateTime StartDate, DateTime EndDate, Language language, LangLevel langLevel, int CreatorId, IFormFile? file = null);
         public Lesson DeleteLesson(int Id);
         Task<Lesson?> FindByIdAsync(int id);
     }

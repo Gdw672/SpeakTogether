@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="AppData\Materials\" />
+    <Folder Include="AppData\Materials\" />
   </ItemGroup>
 
 </Project>

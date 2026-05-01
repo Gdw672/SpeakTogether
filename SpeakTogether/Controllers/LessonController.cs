@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
+using SpeakTogether.Models.DTOs.lesson;
 using SpeakTogether.Service.Interface;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SpeakTogether.Controllers
@@ -16,12 +19,21 @@ namespace SpeakTogether.Controllers
          this.lessonService = lessonService;
         }
 
+        [Authorize]
         [HttpPost("create-with-materials-dto")]
-        public async Task<IActionResult> CreateLessonWithMaterial(string Name, string Description, DateTime StartDate, DateTime EndDate, LangLevel langLevel, int CreatorId, IFormFile file)
+        public async Task<IActionResult> CreateLessonWithMaterial([FromBody] CreateLessonWithMaterialsDto dto)
         {
-            Console.WriteLine(file.Name);
+            var creatorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            return Ok(await lessonService.CreateLessonWithDTO(Name, Description, StartDate, EndDate, langLevel, CreatorId, file));
+            return Ok(await lessonService.CreateLessonWithDTO(
+                dto.Name,
+                dto.Description,
+                dto.StartDate,
+                dto.EndDate,
+                dto.Language,
+                dto.LangLevel,
+                creatorId
+            ));
         }
 
         [HttpDelete]

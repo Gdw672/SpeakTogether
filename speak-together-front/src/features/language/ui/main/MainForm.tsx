@@ -1,69 +1,50 @@
+import { useState } from "react";
 import { getJwtData } from "../../../auth/api/AuthHelper";
+import { Header } from "./Header";
+import { LanguageTabs } from "./LanguageTabs";
+import { Schedule } from "./Schedule";
+
+import { Language } from "../../../Lesson/Language";
 
 export const MainForm = () => {
     const data = getJwtData();
 
     const username =
-        data?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"]
-    const handleProfileClick = () => {
-        console.log("Open profile");
-    };
+        data?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+
+    const [selectedLang, setSelectedLang] = useState<Language>(
+        Language.English
+    );
 
     return (
         <div style={styles.container}>
-            <div style={styles.topRight}>
-                <div style={styles.username}>{username}</div>
-
-                <button style={styles.profileButton} onClick={handleProfileClick}>
-                    👤
-                </button>
-            </div>
+            <Header username={username} />
 
             <div style={styles.content}>
-                <h1>Welcome to SpeakTogether</h1>
+                <h3>Welcome to SpeakTogether</h3>
+
+                <LanguageTabs
+                    value={selectedLang}
+                    onChange={setSelectedLang}
+                />
+
+                <Schedule selectedLang={selectedLang} />
             </div>
         </div>
     );
 };
 
-const styles: Record<string, React.CSSProperties> = {
+const styles = {
     container: {
         height: "100vh",
         width: "100%",
         position: "relative",
         fontFamily: "system-ui, sans-serif",
     },
-
-    topRight: {
-        position: "absolute",
-        top: 20,
-        right: 20,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        gap: 5,
-    },
-
-    username: {
-        fontSize: 14,
-        fontWeight: 500,
-        color: "#333",
-    },
-
-    profileButton: {
-        width: 40,
-        height: 40,
-        borderRadius: "50%",
-        border: "1px solid #ccc",
-        backgroundColor: "#f5f5f5",
-        cursor: "pointer",
-        fontSize: 18,
-    },
-
     content: {
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
-        height: "100%",
+        paddingTop: 60,
     },
-};
+} as const;
