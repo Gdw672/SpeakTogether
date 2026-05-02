@@ -29,10 +29,7 @@ export const HourRow = ({
             {creating && (
                 <CreateLessonCard
                     hour={hour}
-                    onCreate={(l) => {
-                        onCreate(l);
-                        setCreating(false);
-                    }}
+                    onCreate={onCreate}
                 />
             )}
         </div>

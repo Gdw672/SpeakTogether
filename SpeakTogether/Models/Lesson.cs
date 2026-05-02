@@ -21,6 +21,7 @@ namespace SpeakTogether.Models
         {
             this.Name = lessonDTO.Name;
             this.Description = lessonDTO.Description;
+            this.Language = lessonDTO.Language;
             this.LangLevel= lessonDTO.LangLevel;
             this.StartDate = lessonDTO.StartDate;
             this.EndDate = lessonDTO.EndDate;

@@ -6,7 +6,6 @@ import { Schedule } from "../../features/language/ui/main/Schedule";
 import { getJwtData } from "../../features/auth/api/AuthHelper";
 import { Language } from "../../features/Lesson/Language";
 
-
 export const MainPage = () => {
     const data = getJwtData();
 
@@ -29,7 +28,7 @@ export const MainPage = () => {
                     onChange={setSelectedLang}
                 />
 
-                <Schedule selectedLang={selectedLang} />
+                <Schedule />
             </div>
         </div>
     );
@@ -39,7 +38,6 @@ const styles = {
     container: {
         height: "100vh",
         width: "100%",
-        position: "relative",
         fontFamily: "system-ui, sans-serif",
     },
     content: {
