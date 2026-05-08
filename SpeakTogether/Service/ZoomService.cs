@@ -18,7 +18,6 @@ namespace SpeakTogether.Service
         private string accessToken;
         private DateTime tokenExpiry;
 
-
         public ZoomService(HttpClient httpClient, IConfiguration config)
         {
             this.httpClient = httpClient;

@@ -13,8 +13,35 @@ export const Schedule = () => {
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const token = localStorage.getItem("token") || "";
 
-    const handleCreate = async (dto: CreateLessonDTO) => {
+    const handleCreate = async (
+        dto: CreateLessonDTO & {
+            attachments: {
+                type: "file" | "link";
+                file: File | null;
+                link: string;
+            }[];
+        }
+    ) => {
         const createdLesson = await lessonApi.create(dto, token);
+
+        const files = dto.attachments
+            .filter(x => x.type === "file" && x.file)
+            .map(x => x.file!);
+
+        const links = dto.attachments
+            .filter(x => x.type === "link" && x.link)
+            .map(x => x.link);
+
+        if (files.length > 0 || links.length > 0) {
+            await lessonApi.addMaterials(
+                {
+                    lessonId: createdLesson.id,
+                    files,
+                    links,
+                },
+                token
+            );
+        }
 
         setLessons((prev) => [...prev, createdLesson]);
     };

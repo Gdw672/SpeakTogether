@@ -31,12 +31,53 @@ export const lessonApi = {
             console.error("❌ CREATE LESSON ERROR");
             console.error("Status:", error.response?.status);
             console.error("Data:", error.response?.data);
-            console.error("Headers:", error.response?.headers);
-
-            console.log("❌ VALIDATION ERRORS:");
-            console.dir(error.response?.data?.errors, { depth: null });
 
             throw error;
         }
     },
+
+    addMaterials: async (
+        data: LessonMaterialDTO,
+        token: string
+    ) => {
+        try {
+            const formData = new FormData();
+
+            formData.append("lessonId", String(data.lessonId));
+
+            data.files.forEach((file) => {
+                formData.append("files", file);
+            });
+
+            data.links.forEach((link) => {
+                formData.append("links", link);
+            });
+
+            const response = await axios.post(
+                "https://localhost:7173/lesson/add-materials-to-lesson",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
+
+            return response.data;
+        } catch (error: any) {
+            console.error("❌ ADD MATERIALS ERROR");
+            console.error(error.response?.data);
+
+            throw error;
+        }
+    }
+};
+
+export type LessonMaterialDTO = {
+    lessonId: number;
+
+    files: File[];
+
+    links: string[];
 };

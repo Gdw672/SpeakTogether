@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
 using SpeakTogether.Models.DTOs.lesson;
+using SpeakTogether.Models.DTOs.materail;
 using SpeakTogether.Service.Interface;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,6 +34,19 @@ namespace SpeakTogether.Controllers
                 dto.Language,
                 dto.LangLevel,
                 creatorId
+            ));
+        }
+
+        [Authorize]
+        [HttpPost("add-materials-to-lesson")]
+        public async Task<IActionResult> AddMaterailsToLesson([FromForm] AddLessonMaterialsDto dto)
+        {
+            var creatorId = int.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier).Value
+            );
+
+            return Ok(await lessonService.AddMaterialToLesson(
+                dto
             ));
         }
 

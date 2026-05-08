@@ -5,6 +5,7 @@ using SpeakTogether.Context.Interface;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
 using SpeakTogether.Models.DTOs;
+using SpeakTogether.Models.DTOs.materail;
 using SpeakTogether.Service.FileStorage.Interface;
 using SpeakTogether.Service.Interface;
 
@@ -54,6 +55,35 @@ namespace SpeakTogether.Service
             speakTogetherDbContext.SaveChanges();
 
             return lesson;
+        }
+
+        public async Task<bool> AddMaterialToLesson(AddLessonMaterialsDto dto)
+        {
+            var lesson = await speakTogetherDbContext.Lessons.FirstOrDefaultAsync(x => x.Id == dto.LessonId);
+
+            if (dto.Links.Count > 0 && dto.Files.Count > 0)
+            {
+                return false;
+            }
+
+            if (dto.Links.Count > 0) {
+                foreach (var link in dto.Links) { 
+                 var material = new Material(link, " ", "link");
+                    lesson?.Materials.Add(material);
+                }
+            }
+            if (dto.Files.Count > 0)
+            {
+                foreach (var file in dto.Files) {
+                    var path = await fileStorageService.SaveFileAsync(file);
+                    var material = new Material(file.FileName, path, file.ContentType);
+                    lesson?.Materials.Add(material);
+                }
+            }
+
+            speakTogetherDbContext.SaveChanges();
+
+            return true;
         }
 
         public Lesson DeleteLesson(int Id)

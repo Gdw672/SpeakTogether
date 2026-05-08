@@ -22,7 +22,6 @@ function App() {
 
                 <Route path="/main" element={<MainPage />} />
 
-
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
