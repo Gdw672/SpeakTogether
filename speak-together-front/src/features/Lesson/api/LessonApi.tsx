@@ -71,6 +71,28 @@ export const lessonApi = {
 
             throw error;
         }
+    },
+    getLessons: async (
+        token: string
+    ): Promise<Lesson[]> => {
+        try {
+            const response = await axios.get(
+                "https://localhost:7173/lesson/get-lessons",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            return response.data;
+        } catch (error: any) {
+            console.error("❌ GET LESSONS ERROR");
+            console.error("Status:", error.response?.status);
+            console.error("Data:", error.response?.data);
+
+            throw error;
+        }
     }
 };
 

@@ -38,6 +38,15 @@ namespace SpeakTogether.Controllers
         }
 
         [Authorize]
+        [HttpGet("get-lessons")]
+        public async Task<IActionResult> GetLessons()
+        {
+            var creatorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            return Ok(await lessonService.GetLessons(creatorId));
+        }
+
+        [Authorize]
         [HttpPost("add-materials-to-lesson")]
         public async Task<IActionResult> AddMaterailsToLesson([FromForm] AddLessonMaterialsDto dto)
         {

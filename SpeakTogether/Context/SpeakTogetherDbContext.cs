@@ -40,6 +40,12 @@ namespace SpeakTogether.Context
                 .HasOne(p => p.User)
                 .WithMany(u => u.LanguagePreferences)
                 .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<Material>()
+                .HasOne(m => m.Lesson)
+                .WithMany(l => l.Materials)
+                .HasForeignKey(m => m.LessonId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Lesson> Lessons { get; set; }

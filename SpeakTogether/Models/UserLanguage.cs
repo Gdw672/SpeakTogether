@@ -8,7 +8,6 @@ namespace SpeakTogether.Models
 
         public int UserId { get; set; }
         public User User { get; set; }
-
         public Language Language { get; set; }
         public LangLevel Level { get; set; }
     }

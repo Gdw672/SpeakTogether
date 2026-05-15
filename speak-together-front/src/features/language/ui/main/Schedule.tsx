@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HourRow } from "./HourRow";
-
 import type { Lesson } from "../../../Lesson/Lesson";
 import type { CreateLessonDTO } from "../../../Lesson/CreateLessonDTO";
-
 import { lessonApi } from "../../../../features/Lesson/api/LessonApi";
+
 export const Schedule = () => {
     const hours = Array.from({ length: 24 }, (_, i) =>
         i.toString().padStart(2, "0")
@@ -12,6 +11,17 @@ export const Schedule = () => {
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const token = localStorage.getItem("token") || "";
+
+    useEffect(() => {
+        const load = async () => {
+            const data = await lessonApi.getLessons(token);
+            setLessons(data);
+        };
+
+        if (token) {
+            load();
+        }
+    }, [token]);
 
     const handleCreate = async (
         dto: CreateLessonDTO & {
@@ -33,7 +43,7 @@ export const Schedule = () => {
             .map(x => x.link);
 
         if (files.length > 0 || links.length > 0) {
-            await lessonApi.addMaterials(
+            const addedMaterials = await lessonApi.addMaterials(
                 {
                     lessonId: createdLesson.id,
                     files,
@@ -41,6 +51,8 @@ export const Schedule = () => {
                 },
                 token
             );
+
+            console.log("Добавленные материалы:", addedMaterials);
         }
 
         setLessons((prev) => [...prev, createdLesson]);

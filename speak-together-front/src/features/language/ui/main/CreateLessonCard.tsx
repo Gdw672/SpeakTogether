@@ -4,7 +4,6 @@
     import { Language } from "../../../Lesson/Language";
     import { LanguageTabs } from "./LanguageTabs";
 
-    // ---------- utils ----------
     const toMinutes = (h: number, m: number) => h * 60 + m;
 
     const fromMinutes = (total: number) => {
@@ -42,7 +41,6 @@
             LangLevel.Beginner
         );
 
-        // ---------- attachments ----------
         const [attachments, setAttachments] = useState<AttachmentSlot[]>([
             {
                 type: "file",

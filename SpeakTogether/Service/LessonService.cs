@@ -86,6 +86,36 @@ namespace SpeakTogether.Service
             return true;
         }
 
+        public async Task<List<Lesson>> GetLessons(int creatorId)
+        {
+            var user = await speakTogetherDbContext.Users
+                .Include(x => x.LanguagePreferences)
+                .Include(x => x.Languages)
+                .FirstOrDefaultAsync(x => x.Id == creatorId);
+
+            if (user == null)
+                return new List<Lesson>();
+
+            var prefs = user.LanguagePreferences;
+
+            var lessons = await speakTogetherDbContext.Lessons
+     .Include(l => l.Materials)
+     .ToListAsync();
+
+            var now = DateTime.UtcNow;
+
+            var result = lessons.Where(l =>
+                l.EndDate > now &&
+                prefs.Any(p =>
+                    p.Language == l.Language &&
+                    l.LangLevel >= p.MinLevel &&
+                    l.LangLevel <= p.MaxLevel
+                )
+            ).ToList();
+
+            return result;
+        }
+
         public Lesson DeleteLesson(int Id)
         {
             var lessons = speakTogetherDbContext.Lessons;

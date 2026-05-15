@@ -5,6 +5,7 @@ import "./App.css";
 import { SelectLanguagePage } from "./pages/language/SelectLanguagePage";
 import { SelectLanguagePreferencesPage } from "./pages/language/SelectLanguagePreferencesPage";
 import { MainPage } from "./pages/main/MainPage";
+import { SettingsPage } from "./pages/SettingPage";
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
                 <Route path="/select-language-preferences" element={<SelectLanguagePreferencesPage />} />
 
                 <Route path="/main" element={<MainPage />} />
+
+                <Route path="/settings" element={<SettingsPage />} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

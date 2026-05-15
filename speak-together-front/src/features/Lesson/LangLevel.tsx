@@ -8,3 +8,12 @@ export const LangLevel = {
 } as const;
 
 export type LangLevel = typeof LangLevel[keyof typeof LangLevel];
+
+export const LangLevelLabel: Record<LangLevel, string> = {
+    [LangLevel.Beginner]: "Beginner",
+    [LangLevel.Elementary]: "Elementary",
+    [LangLevel.Intermediate]: "Intermediate",
+    [LangLevel.Upper_Intermediate]: "Upper Intermediate",
+    [LangLevel.Advanced]: "Advanced",
+    [LangLevel.Proficient]: "Proficient",
+};
