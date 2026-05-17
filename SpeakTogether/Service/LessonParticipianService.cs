@@ -14,12 +14,23 @@ namespace SpeakTogether.Service
         { 
             this.speakTogetherDbContext = speakTogetherDbContext;
         }
-        public async Task<LessonParticipant> AddParticipianToLesson(int UserId, int LessonId)
+        public async Task<LessonParticipant> AddParticipianToLesson(int userId, int lessonId)
         {
-            var participians = speakTogetherDbContext.LessonParticipants;
-            var newParticipian = new LessonParticipant { UserId = UserId, LessonId = LessonId };
+            var exists = await speakTogetherDbContext.LessonParticipants
+                .AnyAsync(x => x.UserId == userId && x.LessonId == lessonId);
+
+            if (exists)
+                return null;
+
+            var newParticipian = new LessonParticipant
+            {
+                UserId = userId,
+                LessonId = lessonId
+            };
+
             await speakTogetherDbContext.LessonParticipants.AddAsync(newParticipian);
             await speakTogetherDbContext.SaveChangesAsync();
+
             return newParticipian;
         }
     }

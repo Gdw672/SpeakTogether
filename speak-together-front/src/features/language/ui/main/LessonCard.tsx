@@ -1,14 +1,17 @@
-﻿import { LangLevelLabel } from "../../../Lesson/LangLevel";
+﻿import { useState } from "react";
+import { LangLevelLabel } from "../../../Lesson/LangLevel";
 import { LanguageLabel } from "../../../Lesson/Language";
 import type { Lesson } from "../../../Lesson/Lesson";
+import { participantApi } from "../../../participians/ParticipiantApi";
 
 export const LessonCard = ({
     lesson,
-    currentUserId,
 }: {
     lesson: Lesson;
     currentUserId: string | null;
 }) => {
+    const [isEnrolling, setIsEnrolling] = useState(false);
+
     const formatTime = (dateString: string) => {
         return new Date(dateString).toLocaleTimeString("ru-RU", {
             hour: "2-digit",
@@ -31,63 +34,84 @@ export const LessonCard = ({
         const blobUrl = window.URL.createObjectURL(blob);
 
         const link = document.createElement("a");
-
         link.href = blobUrl;
         link.download = fileName;
 
         document.body.appendChild(link);
-
         link.click();
-
         link.remove();
 
         window.URL.revokeObjectURL(blobUrl);
     };
 
-    const isOwner =
-        String(lesson.creatorId) === String(currentUserId);
+    const enroll = async () => {
+        try {
+            setIsEnrolling(true);
+
+            await participantApi.enroll(Number(lesson.id));
+
+            // ❗ важно: НЕ держим state isEnrolled локально
+            // теперь это управляется backend-данными
+        } catch (e) {
+            console.error("Enroll failed", e);
+        } finally {
+            setIsEnrolling(false);
+        }
+    };
+
+    const isOwner = lesson.isOwner;
+    const isEnrolled = lesson.isEnrolled;
 
     return (
         <div style={styles.card}>
             <div style={styles.title}>{lesson.name}</div>
 
             <div>
-                <span>Description :</span> {lesson.description}
+                <span>Description:</span> {lesson.description}
             </div>
 
             <div>
-                <span>Language :</span>{" "}
+                <span>Language:</span>{" "}
                 {LanguageLabel[lesson.language]}
             </div>
 
             <div>
-                <span>Level :</span>{" "}
+                <span>Level:</span>{" "}
                 {LangLevelLabel[lesson.langLevel]}
             </div>
 
             <div>
-                <span>Start :</span>{" "}
+                <span>Start:</span>{" "}
                 {formatTime(lesson.startDate)}
             </div>
 
             <div>
-                <span>End :</span>{" "}
+                <span>End:</span>{" "}
                 {formatTime(lesson.endDate)}
             </div>
 
-            {/* 👇 Логика владельца */}
+            {/* 👇 Enrollment logic */}
             <div style={{ marginTop: 10 }}>
                 {isOwner ? (
                     <span style={{ fontWeight: 600 }}>
                         Это ваш урок
                     </span>
                 ) : (
-                    <button style={styles.button}>
-                        Записаться
+                    <button
+                        style={styles.button}
+                        onClick={enroll}
+                        disabled={isEnrolling || isEnrolled}
+                    >
+                        {isEnrolled
+                            ? "Вы записаны"
+                            : isEnrolling
+                                ? "Запись..."
+                                : "Записаться"}
                     </button>
                 )}
             </div>
 
+            {/* Materials */}
             {lesson.materials?.length ? (
                 <div style={{ marginTop: 10 }}>
                     <div style={{ fontWeight: 600 }}>
@@ -106,10 +130,9 @@ export const LessonCard = ({
                                 </a>
                             ) : (
                                 <button
-                                    onClick={() => {
-                                        console.log(m.path);
-                                        downloadFile(m.path);
-                                    }}
+                                    onClick={() =>
+                                        downloadFile(m.path)
+                                    }
                                     style={styles.button}
                                 >
                                     ⬇ Download {m.name}
@@ -142,5 +165,6 @@ const styles = {
         border: "1px solid #999",
         borderRadius: 4,
         background: "#f5f5f5",
+        color: "#000",
     },
 } as const;

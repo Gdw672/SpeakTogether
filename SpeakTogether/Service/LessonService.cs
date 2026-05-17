@@ -5,6 +5,7 @@ using SpeakTogether.Context.Interface;
 using SpeakTogether.Enums;
 using SpeakTogether.Models;
 using SpeakTogether.Models.DTOs;
+using SpeakTogether.Models.DTOs.lesson;
 using SpeakTogether.Models.DTOs.materail;
 using SpeakTogether.Service.FileStorage.Interface;
 using SpeakTogether.Service.Interface;
@@ -86,32 +87,49 @@ namespace SpeakTogether.Service
             return true;
         }
 
-        public async Task<List<Lesson>> GetLessons(int creatorId)
+        public async Task<List<LessonDtoResponse>> GetLessons(int userId)
         {
             var user = await speakTogetherDbContext.Users
                 .Include(x => x.LanguagePreferences)
-                .Include(x => x.Languages)
-                .FirstOrDefaultAsync(x => x.Id == creatorId);
+                .FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
-                return new List<Lesson>();
+                return new List<LessonDtoResponse>();
 
             var prefs = user.LanguagePreferences;
 
-            var lessons = await speakTogetherDbContext.Lessons
-     .Include(l => l.Materials)
-     .ToListAsync();
-
             var now = DateTime.UtcNow;
 
-            var result = lessons.Where(l =>
-                l.EndDate > now &&
-                prefs.Any(p =>
-                    p.Language == l.Language &&
-                    l.LangLevel >= p.MinLevel &&
-                    l.LangLevel <= p.MaxLevel
+            var lessons = await speakTogetherDbContext.Lessons
+                .Include(l => l.Materials)
+                .Include(l => l.Participants)
+                .ToListAsync();
+
+            var result = lessons
+                .Where(l =>
+                    l.EndDate > now &&
+                    prefs.Any(p =>
+                        p.Language == l.Language &&
+                        l.LangLevel >= p.MinLevel &&
+                        l.LangLevel <= p.MaxLevel
+                    )
                 )
-            ).ToList();
+                .Select(l => new LessonDtoResponse
+                {
+                    Id = l.Id,
+                    CreatorId = l.CreatorId,
+                    Name = l.Name,
+                    Description = l.Description,
+                    Language = l.Language,
+                    LangLevel = l.LangLevel,
+                    StartDate = l.StartDate,
+                    EndDate = l.EndDate,
+                    ZoomStartUrl = l.ZoomStartUrl,
+                    ZoomJoinUrl = l.ZoomJoinUrl,
+                    IsOwner = l.CreatorId == userId,
+                    IsEnrolled = l.Participants.Any(p => p.UserId == userId)
+                })
+                .ToList();
 
             return result;
         }

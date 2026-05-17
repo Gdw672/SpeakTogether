@@ -15,4 +15,7 @@ export type Lesson = {
     langLevel: LangLevel;
 
     materials?: Material[];
+
+    isEnrolled: boolean;
+    isOwner: boolean;
 };
