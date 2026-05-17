@@ -10,9 +10,12 @@
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.IdentityModel.Tokens;
     using System.Text;
+using Hangfire;
+using Hangfire.MemoryStorage;
+using SpeakTogether.SignalR;
 
 
-    var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
     var Origins = "speak-together-front";
 
@@ -67,12 +70,20 @@
     builder.Services.AddScoped<IMaterialService, MaterialService>();
     builder.Services.AddScoped<ILessonParticipianService, LessonParticipianService>();
     builder.Services.AddScoped<IJwtService, JwtService>();
+    builder.Services.AddScoped<INotificationService, NotificationService>();
 
-    builder.WebHost.UseUrls("https://localhost:7173");
+    builder.Services.AddSignalR();
+
+    builder.Services.AddHangfire(config =>
+      config.UseMemoryStorage()
+       );
+
+
+builder.WebHost.UseUrls("https://localhost:7173");
 
     var app = builder.Build();
 
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI();
 
     app.UseHttpsRedirection();
@@ -81,6 +92,10 @@
 
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.MapHub<NotificationHub>("/notificationHub");
+
+    app.UseHangfireDashboard();
 
     app.MapControllers();
 
