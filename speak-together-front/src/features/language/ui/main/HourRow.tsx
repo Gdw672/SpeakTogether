@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LessonCard } from "./LessonCard";
 import { CreateLessonCard } from "./CreateLessonCard";
+
 import type { CreateLessonDTO } from "../../../Lesson/CreateLessonDTO";
 import type { Lesson } from "../../../Lesson/Lesson";
 
@@ -8,10 +9,12 @@ export const HourRow = ({
     hour,
     lessons,
     onCreate,
+    currentUserId,
 }: {
     hour: string;
     lessons: Lesson[];
     onCreate: (l: CreateLessonDTO) => void;
+    currentUserId: string | null;
 }) => {
     const [creating, setCreating] = useState(false);
 
@@ -19,11 +22,18 @@ export const HourRow = ({
         <div style={styles.row}>
             <div style={styles.header}>
                 <span>{hour}:00</span>
-                <button onClick={() => setCreating((p) => !p)}>＋</button>
+
+                <button onClick={() => setCreating((p) => !p)}>
+                    ＋
+                </button>
             </div>
 
             {lessons.map((l) => (
-                <LessonCard key={l.id} lesson={l} />
+                <LessonCard
+                    key={l.id}
+                    lesson={l}
+                    currentUserId={currentUserId}
+                />
             ))}
 
             {creating && (
@@ -42,6 +52,7 @@ const styles = {
         borderBottom: "1px solid #eee",
         paddingBottom: 10,
     },
+
     header: {
         display: "flex",
         justifyContent: "space-between",

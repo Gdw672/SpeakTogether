@@ -4,6 +4,7 @@ import type { LangLevel } from "./LangLevel"
 
 export type Lesson = {
     id: number;
+    creatorid: number;
     name: string;
     description: string;
 

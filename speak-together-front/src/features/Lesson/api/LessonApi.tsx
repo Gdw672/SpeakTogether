@@ -15,6 +15,7 @@ export const lessonApi = {
                     description: data.description,
                     startDate: new Date(data.startDate).toISOString(),
                     endDate: new Date(data.endDate).toISOString(),
+                    creatorid: data.creatorid,
                     language: data.language,
                     langLevel: data.langLevel
                 },

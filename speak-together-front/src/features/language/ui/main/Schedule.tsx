@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { HourRow } from "./HourRow";
+
 import type { Lesson } from "../../../Lesson/Lesson";
 import type { CreateLessonDTO } from "../../../Lesson/CreateLessonDTO";
+
 import { lessonApi } from "../../../../features/Lesson/api/LessonApi";
+import { getUserIdFromJwt } from "../../../../features/auth/api/AuthHelper";
 
 export const Schedule = () => {
     const hours = Array.from({ length: 24 }, (_, i) =>
@@ -10,7 +13,11 @@ export const Schedule = () => {
     );
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
+
     const token = localStorage.getItem("token") || "";
+
+    // ?? ID текущего пользователя
+    const currentUserId = getUserIdFromJwt();
 
     useEffect(() => {
         const load = async () => {
@@ -35,12 +42,12 @@ export const Schedule = () => {
         const createdLesson = await lessonApi.create(dto, token);
 
         const files = dto.attachments
-            .filter(x => x.type === "file" && x.file)
-            .map(x => x.file!);
+            .filter((x) => x.type === "file" && x.file)
+            .map((x) => x.file!);
 
         const links = dto.attachments
-            .filter(x => x.type === "link" && x.link)
-            .map(x => x.link);
+            .filter((x) => x.type === "link" && x.link)
+            .map((x) => x.link);
 
         if (files.length > 0 || links.length > 0) {
             const addedMaterials = await lessonApi.addMaterials(
@@ -73,6 +80,7 @@ export const Schedule = () => {
                         return hour === h;
                     })}
                     onCreate={handleCreate}
+                    currentUserId={currentUserId}
                 />
             ))}
         </div>

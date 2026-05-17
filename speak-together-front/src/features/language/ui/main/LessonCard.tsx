@@ -2,7 +2,13 @@
 import { LanguageLabel } from "../../../Lesson/Language";
 import type { Lesson } from "../../../Lesson/Lesson";
 
-export const LessonCard = ({ lesson }: { lesson: Lesson }) => {
+export const LessonCard = ({
+    lesson,
+    currentUserId,
+}: {
+    lesson: Lesson;
+    currentUserId: string | null;
+}) => {
     const formatTime = (dateString: string) => {
         return new Date(dateString).toLocaleTimeString("ru-RU", {
             hour: "2-digit",
@@ -11,7 +17,9 @@ export const LessonCard = ({ lesson }: { lesson: Lesson }) => {
     };
 
     const downloadFile = async (fileName: string) => {
-        const url = "https://localhost:7173/Material/download/" + fileName;
+        const url =
+            "https://localhost:7173/Material/download/" + fileName;
+
         const res = await fetch(url);
 
         if (!res.ok) {
@@ -23,15 +31,21 @@ export const LessonCard = ({ lesson }: { lesson: Lesson }) => {
         const blobUrl = window.URL.createObjectURL(blob);
 
         const link = document.createElement("a");
+
         link.href = blobUrl;
         link.download = fileName;
 
         document.body.appendChild(link);
+
         link.click();
 
         link.remove();
+
         window.URL.revokeObjectURL(blobUrl);
     };
+
+    const isOwner =
+        String(lesson.creatorId) === String(currentUserId);
 
     return (
         <div style={styles.card}>
@@ -42,24 +56,43 @@ export const LessonCard = ({ lesson }: { lesson: Lesson }) => {
             </div>
 
             <div>
-                <span>Language :</span> {LanguageLabel[lesson.language]}
+                <span>Language :</span>{" "}
+                {LanguageLabel[lesson.language]}
             </div>
 
             <div>
-                <span>Level :</span> {LangLevelLabel[lesson.langLevel]}
+                <span>Level :</span>{" "}
+                {LangLevelLabel[lesson.langLevel]}
             </div>
 
             <div>
-                <span>Start :</span> {formatTime(lesson.startDate)}
+                <span>Start :</span>{" "}
+                {formatTime(lesson.startDate)}
             </div>
 
             <div>
-                <span>End :</span> {formatTime(lesson.endDate)}
+                <span>End :</span>{" "}
+                {formatTime(lesson.endDate)}
+            </div>
+
+            {/* 👇 Логика владельца */}
+            <div style={{ marginTop: 10 }}>
+                {isOwner ? (
+                    <span style={{ fontWeight: 600 }}>
+                        Это ваш урок
+                    </span>
+                ) : (
+                    <button style={styles.button}>
+                        Записаться
+                    </button>
+                )}
             </div>
 
             {lesson.materials?.length ? (
                 <div style={{ marginTop: 10 }}>
-                    <div style={{ fontWeight: 600 }}>Materials:</div>
+                    <div style={{ fontWeight: 600 }}>
+                        Materials:
+                    </div>
 
                     {lesson.materials.map((m) => (
                         <div key={m.id} style={{ marginTop: 6 }}>
@@ -69,14 +102,14 @@ export const LessonCard = ({ lesson }: { lesson: Lesson }) => {
                                     target="_blank"
                                     rel="noreferrer"
                                 >
-                                     {m.name}
+                                    {m.name}
                                 </a>
                             ) : (
                                 <button
-                                        onClick={() => {
-                                            console.log(m.path);
-                                            downloadFile(m.path);
-                                        }}
+                                    onClick={() => {
+                                        console.log(m.path);
+                                        downloadFile(m.path);
+                                    }}
                                     style={styles.button}
                                 >
                                     ⬇ Download {m.name}
