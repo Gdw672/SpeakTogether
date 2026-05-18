@@ -7,42 +7,46 @@ namespace SpeakTogether.Hangfire
 {
     public class NotificationJob
     {
-        private readonly NotificationService notificationService;
-        private readonly SpeakTogetherDbContext speakTogetherDbContext;
+        private readonly IServiceProvider _serviceProvider;
 
-        public NotificationJob(NotificationService service, SpeakTogetherDbContext speakTogetherDbContext)
+        public NotificationJob(IServiceProvider serviceProvider)
         {
-            notificationService = service;
-            this.speakTogetherDbContext = speakTogetherDbContext;
+            _serviceProvider = serviceProvider;
         }
 
-        public async Task Execute(string userId, string message)
+        public async Task RunNotificationHeartbeat()
         {
-            var now = DateTime.UtcNow;
-            var targetTime = now.AddMinutes(30);
-
-            var lessons = await speakTogetherDbContext.Lessons
-                .Include(x => x.Participants)
-                    .ThenInclude(p => p.User)
-                .Where(x =>
-                    x.StartDate <= targetTime &&
-                    x.StartDate > now &&
-                    !x.NotificationSent)
-                .ToListAsync();
-
-            foreach (var lesson in lessons)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                foreach (var participant in lesson.Participants)
+                var dbContext = scope.ServiceProvider.GetRequiredService<SpeakTogetherDbContext>();
+                var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
+
+                var now = DateTime.UtcNow;
+                var targetTime = now.AddMinutes(30);
+
+                var lessons = await dbContext.Lessons
+                    .Include(x => x.Participants)
+                    .Where(x => x.StartDate <= targetTime && x.StartDate > now && !x.NotificationSent)
+                    .ToListAsync();
+
+                foreach (var lesson in lessons)
                 {
-                    await notificationService.SendToUser(
-                        participant.UserId.ToString(),
-                        $"Урок '{lesson.Name}' начнётся менее чем через 30 минут");
+                    foreach (var participant in lesson.Participants)
+                    {
+                        await notificationService.SendToUser(
+                            participant.UserId.ToString(),
+                            $"Урок '{lesson.Name}' начнётся менее чем через 30 минут.\n Ссылка: {lesson.ZoomJoinUrl}.");
+                        Console.WriteLine($"--------- УВЕДОМЛЕНИЕ ВЫДАНО ПОЛЬЗОВАТЕЛЮ С ID {participant.UserId}");
+                    }
+
+                    lesson.NotificationSent = true;
                 }
 
-                lesson.NotificationSent = true;
+                if (lessons.Any())
+                {
+                    await dbContext.SaveChangesAsync();
+                }
             }
-
-            await speakTogetherDbContext.SaveChangesAsync();
         }
     }
 }

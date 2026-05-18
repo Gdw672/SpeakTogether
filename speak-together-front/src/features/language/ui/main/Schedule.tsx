@@ -16,7 +16,6 @@ export const Schedule = () => {
 
     const token = localStorage.getItem("token") || "";
 
-    // ?? ID текущего пользователя
     const currentUserId = getUserIdFromJwt();
 
     useEffect(() => {

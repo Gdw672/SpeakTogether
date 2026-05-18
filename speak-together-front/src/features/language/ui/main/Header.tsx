@@ -14,7 +14,7 @@ export const Header = ({ username }: { username: string }) => {
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:5001/notificationHub", {
+            .withUrl("https://localhost:7173/notificationHub", {
                 accessTokenFactory: () => localStorage.getItem("token") || ""
             })
             .withAutomaticReconnect()
@@ -27,14 +27,22 @@ export const Header = ({ username }: { username: string }) => {
             ]);
         });
 
-        connection.start();
+        const start = async () => {
+            try {
+                await connection.start();
+                console.log("SignalR connected");
+            } catch (err) {
+                console.error("SignalR error:", err);
+            }
+        };
+
+        start();
 
         return () => {
             connection.stop();
         };
     }, []);
 
-    // закрытие по клику вне
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (!wrapperRef.current?.contains(e.target as Node)) {

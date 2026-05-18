@@ -8,13 +8,31 @@ namespace SpeakTogether.SignalR
     public class NotificationHub : Hub
     {
         [Authorize]
-        public void Notify()
+        public override async Task OnConnectedAsync()
         {
-            var creatorId = int.Parse(
-                            Context.User.FindFirst(ClaimTypes.NameIdentifier).Value
-                        );
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+                Console.WriteLine($" User {userId} connected. ConnectionId: {Context.ConnectionId}");
+            }
 
+            await base.OnConnectedAsync();
+        }
+
+        [Authorize]
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+                Console.WriteLine($" User {userId} disconnected");
+            }
+
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
