@@ -42,6 +42,7 @@ namespace SpeakTogether.Models
         public DateTime EndDate { get; set; }
         public string ZoomStartUrl { get; set; }
         public string ZoomJoinUrl { get; set; }
+        public bool NotificationSent { get; set; }
         public ICollection<Material> Materials { get; set; } = new List<Material>();
         public ICollection<LessonParticipant> Participants { get; set; } = new List<LessonParticipant>();
     }
