@@ -14,6 +14,7 @@ namespace SpeakTogether.Hangfire
             _serviceProvider = serviceProvider;
         }
 
+        //ToDo: сделать уведомление более корректные на уровне participiant.
         public async Task RunNotificationHeartbeat()
         {
             using (var scope = _serviceProvider.CreateScope())
