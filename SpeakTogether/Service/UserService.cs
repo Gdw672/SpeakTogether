@@ -24,9 +24,9 @@ namespace SpeakTogether.Service
           this.jwtService = jwtService;
         }
 
-        public User CreateUser(string Name, string Email, string Password, DateTime RegistrationDate)
+        public async Task<User> CreateUser(string Name, string Email, string Password, DateTime RegistrationDate)
         {
-            var existingUser = speakTogetherDbContext.Users.FirstOrDefault(u => u.Email == Email);
+            var existingUser = await speakTogetherDbContext.Users.FirstOrDefaultAsync(u => u.Email == Email);
 
             if (existingUser != null)
                 return null;
@@ -35,24 +35,24 @@ namespace SpeakTogether.Service
             {
                 Name = Name,
                 Email = Email,
-                PasswordHash = passwordHashService.Hash(Password),
+                PasswordHash = await passwordHashService.HashAsync(Password),
                 RegistrationDate = DateTime.SpecifyKind(RegistrationDate, DateTimeKind.Utc),
             };
 
-            speakTogetherDbContext.Users.Add(user);
-            speakTogetherDbContext.SaveChanges();
+            await speakTogetherDbContext.Users.AddAsync(user);
+            await speakTogetherDbContext.SaveChangesAsync();
 
             return user;
         }
 
-        public bool Verify(string email, string password)
+        public async Task<bool> Verify(string email, string password)
         {
-           var user = speakTogetherDbContext.Users.FirstOrDefault(user => user.Email == email);
+            var user = await speakTogetherDbContext.Users.FirstOrDefaultAsync(user => user.Email == email);
 
             if (user == null)
                 return false;
 
-            return passwordHashService.Verify(password, user.PasswordHash);
+            return await passwordHashService.VerifyAsync(password, user.PasswordHash);
         }
 
         private async Task<User> VerifyUserAsync(string email, string password)
@@ -62,7 +62,7 @@ namespace SpeakTogether.Service
             if (user == null)
                 return null;
 
-            var success = passwordHashService.Verify(password, user.PasswordHash);
+            var success = await passwordHashService.VerifyAsync(password, user.PasswordHash);
 
             if (!success) return null;
 

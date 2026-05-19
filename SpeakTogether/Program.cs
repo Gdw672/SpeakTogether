@@ -15,6 +15,7 @@ using Hangfire.MemoryStorage;
 using SpeakTogether.SignalR;
 using SpeakTogether.Hangfire;
 
+ThreadPool.SetMinThreads(100, 100);
 
 var builder = WebApplication.CreateBuilder(args);
 

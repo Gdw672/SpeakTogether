@@ -1,8 +1,8 @@
-﻿namespace SpeakTogether.Service.PasswordHasher.Interface
-{
-    public interface IPasswordHashService
+﻿    namespace SpeakTogether.Service.PasswordHasher.Interface
     {
-        string Hash(string password);
-        bool Verify(string password, string stored);
+        public interface IPasswordHashService
+        {
+            Task<string> HashAsync(string password);
+            Task<bool> VerifyAsync(string password, string stored);
+        }
     }
-}

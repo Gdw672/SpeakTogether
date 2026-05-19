@@ -21,10 +21,10 @@ namespace SpeakTogether.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult CreateUser([FromBody] Models.DTOs.register.RegisterRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] Models.DTOs.register.RegisterRequest request)
 
         {
-            var result = UserService.CreateUser(request.Username, request.Email, request.Password, DateTime.Now);
+            var result = await UserService.CreateUser(request.Username, request.Email, request.Password, DateTime.Now);
 
             if (result == null)
                 return Conflict(new RegisterResponse
@@ -95,9 +95,9 @@ namespace SpeakTogether.Controllers
 
 
         [HttpPost("verify-password")]
-        public IActionResult VerifyPassword([FromBody] Models.DTOs.login.LoginRequest request)
+        public async Task<IActionResult> VerifyPassword([FromBody] Models.DTOs.login.LoginRequest request)
         {
-            var result = UserService.Verify(request.Email, request.Password);
+            var result = await UserService.Verify(request.Email, request.Password);
 
             if (!result)
             {

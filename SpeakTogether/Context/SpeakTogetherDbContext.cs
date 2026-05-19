@@ -14,6 +14,10 @@ namespace SpeakTogether.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<LessonParticipant>()
                 .HasKey(lp => new { lp.LessonId, lp.UserId });
 

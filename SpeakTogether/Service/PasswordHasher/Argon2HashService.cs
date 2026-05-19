@@ -13,7 +13,7 @@ namespace SpeakTogether.Service.PasswordHasher
         private const int Iterations = 4;
         private const int Parallelism = 4;
 
-        public string Hash(string password)
+        public async Task<string> HashAsync(string password)
         {
             var salt = RandomNumberGenerator.GetBytes(SaltSize);
 
@@ -25,13 +25,13 @@ namespace SpeakTogether.Service.PasswordHasher
                 Iterations = Iterations
             };
 
-            var hash = argon2.GetBytes(HashSize);
+            var hash = await argon2.GetBytesAsync(HashSize);
 
             return Convert.ToBase64String(salt) + "." +
                    Convert.ToBase64String(hash);
         }
 
-        public bool Verify(string password, string stored)
+        public async Task<bool> VerifyAsync(string password, string stored)
         {
             var parts = stored.Split('.');
             var salt = Convert.FromBase64String(parts[0]);
@@ -45,7 +45,8 @@ namespace SpeakTogether.Service.PasswordHasher
                 Iterations = Iterations
             };
 
-            var hash = argon2.GetBytes(HashSize);
+            var hash = await argon2.GetBytesAsync(HashSize);
+
             return CryptographicOperations.FixedTimeEquals(hash, storedHash);
         }
     }
