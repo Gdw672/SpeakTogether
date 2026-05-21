@@ -2,6 +2,8 @@
 import { chooseLanguage } from "../api/LanguageApi";
 import type { UserLanguageDto } from "../LanguageTypes";
 import { getJwt } from "../../auth/api/AuthHelper";
+import { useNavigate } from "react-router-dom";
+
 const LANGUAGES = [
     { name: "English", flag: "🇬🇧" },
     { name: "German", flag: "🇩🇪" },
@@ -26,12 +28,12 @@ const LEVEL_MAP: Record<string, number> = {
 
 
 export const SelectLanguageForm = () => {
+    const navigate = useNavigate(); 
     const [selectedLanguages, setSelectedLanguages] = useState([]);
 
     const handleAddLanguage = (lang) => {
         if (!lang) return;
 
-        // не добавляем дубликаты
         if (selectedLanguages.find((l) => l.name === lang)) return;
 
         setSelectedLanguages([
@@ -46,8 +48,6 @@ export const SelectLanguageForm = () => {
             level: LEVEL_MAP[l.level],
         }));
 
-        console.log("🚀 Payload to backend:", payload);
-
         const token = getJwt();
 
         if (!token) {
@@ -57,7 +57,7 @@ export const SelectLanguageForm = () => {
 
         try {
             await chooseLanguage(payload, token);
-            console.log("Saved");
+            navigate("/select-language-preferences");
         } catch (e) {
             console.error(e);
         }

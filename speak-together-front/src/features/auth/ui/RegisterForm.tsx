@@ -1,15 +1,16 @@
 ﻿import { useState } from "react"
 import { registerRequest } from "../api/AuthApi";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 export const RegisterForm = () => {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [message, setMessage] = useState("")
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
+
         e.preventDefault()
 
         const res = await registerRequest({ username, email, password })
@@ -17,6 +18,10 @@ export const RegisterForm = () => {
         setMessage(res.message)
 
         console.log(res)
+
+        if (res.success) {
+            navigate("/")
+        }
     }
 
     return (

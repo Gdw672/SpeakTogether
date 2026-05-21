@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as signalR from "@microsoft/signalr";
+import { useNavigate } from "react-router-dom";
 
 type Notification = {
     id: number;
@@ -7,6 +8,7 @@ type Notification = {
 };
 
 export const Header = ({ username }: { username: string }) => {
+    const navigate = useNavigate();
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [open, setOpen] = useState(false);
 
@@ -91,9 +93,12 @@ export const Header = ({ username }: { username: string }) => {
                     )}
                 </div>
 
-                {/* 👤 PROFILE */}
-                <button style={styles.button}>👤</button>
-            </div>
+                <button
+                    style={styles.button}
+                    onClick={() => navigate("/settings")}
+                >
+                    👤
+                </button>            </div>
         </div>
     );
 };

@@ -58,7 +58,7 @@ export const Schedule = () => {
                 token
             );
 
-            console.log("Добавленные материалы:", addedMaterials);
+            console.log("Added materials:", addedMaterials);
         }
 
         setLessons((prev) => [...prev, createdLesson]);

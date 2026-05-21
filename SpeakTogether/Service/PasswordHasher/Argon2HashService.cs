@@ -9,9 +9,9 @@ namespace SpeakTogether.Service.PasswordHasher
     {
         private const int SaltSize = 16;
         private const int HashSize = 32;
-        private const int MemorySize = 65536;
-        private const int Iterations = 4;
-        private const int Parallelism = 4;
+        private const int MemorySize = 8192;
+        private const int Iterations = 2;
+        private const int Parallelism = 1;
 
         public async Task<string> HashAsync(string password)
         {

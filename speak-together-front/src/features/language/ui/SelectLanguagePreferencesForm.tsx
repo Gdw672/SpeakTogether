@@ -2,6 +2,7 @@
 import { choosePreferences } from "../api/LanguageApi";
 import type { UserLanguagePreferenceDto } from "../LanguageTypes";
 import { getJwt } from "../../auth/api/AuthHelper";
+import { useNavigate } from "react-router-dom";
 
 const LANGUAGES = [
     { name: "English", flag: "🇬🇧" },
@@ -33,6 +34,8 @@ type SelectedLanguage = {
 };
 
 export const SelectLanguagePreferenceForm = () => {
+    const navigate = useNavigate(); 
+
     const [selectedLanguages, setSelectedLanguages] = useState<SelectedLanguage[]>([]);
 
     const handleAddLanguage = (lang: string) => {
@@ -81,6 +84,7 @@ export const SelectLanguagePreferenceForm = () => {
         try {
             await choosePreferences(payload, token);
             console.log("Saved");
+            navigate("/main");
         } catch (e) {
             console.error(e);
         }

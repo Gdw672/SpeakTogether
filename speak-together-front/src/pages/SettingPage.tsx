@@ -1,6 +1,7 @@
 ﻿import { useState } from "react";
 import { chooseLanguage, choosePreferences } from "../features/language/api/LanguageApi";
 import { getJwt } from "../features/auth/api/AuthHelper";
+import { useNavigate } from "react-router-dom";
 
 const LANGUAGES = [
     { name: "English", flag: "🇬🇧" },
@@ -27,6 +28,7 @@ const LEVEL_MAP: Record<string, number> = {
 
 
 export const SettingsPage = () => {
+    const navigate = useNavigate(); 
     const [skills, setSkills] = useState<{ name: string; level: string }[]>([]);
     const [preferences, setPreferences] = useState<
         { name: string; minLevel: string; maxLevel: string }[]
@@ -59,6 +61,7 @@ export const SettingsPage = () => {
         }));
 
         await chooseLanguage(payload, token);
+
     };
 
     const addPreferenceLanguage = (lang: string) => {
@@ -103,6 +106,9 @@ export const SettingsPage = () => {
 
     return (
         <div style={styles.page}>
+            <button onClick={() => navigate("/main")} style={styles.closeBtn}>
+                ✕
+            </button>
             <h1>Settings</h1>
 
             {}
@@ -224,5 +230,20 @@ const styles: Record<string, React.CSSProperties> = {
         display: "flex",
         gap: 10,
         alignItems: "center",
+    },
+    closeBtn: {
+        position: "fixed",
+        top: 15,
+        right: 15,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        border: "none",
+        cursor: "pointer",
+        fontSize: 20,
+        backgroundColor: "#eee",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
     },
 };

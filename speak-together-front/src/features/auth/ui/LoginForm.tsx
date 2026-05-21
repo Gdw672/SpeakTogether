@@ -21,7 +21,7 @@ export const LoginForm = () => {
                 console.log(res.token);
                 console.log("DECODED:", jwtDecode(res.token));
                 localStorage.setItem("token", res.token)
-                navigate("/select-language")
+                navigate("/main")
                 setMessage("Login successful")
             } else {
                 setMessage("Invalid response from server")
