@@ -1,17 +1,13 @@
 ﻿using NBomber.CSharp;
-
 using NBomber.CSharp;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-
 using NBomber.CSharp;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
-
-Thread.Sleep(TimeSpan.FromSeconds(10));
 
 System.Net.ServicePointManager.DefaultConnectionLimit = 200;
 
@@ -26,7 +22,6 @@ client.DefaultRequestHeaders.ConnectionClose = false;
 
 var scenario = Scenario.Create("auth_load_test", async context =>
 {
-    // Данные статичны, никакой лишней работы для процессора на стороне теста
     var loginBody = new
     {
         email = "test_load@mail.com",
@@ -39,7 +34,6 @@ var scenario = Scenario.Create("auth_load_test", async context =>
         "application/json"
     );
 
-    // Делаем ВСЕГО ОДИН запрос вместо двух
     var loginResponse = await client.PostAsync(
         "https://localhost:7173/user/log-in",
         loginContent

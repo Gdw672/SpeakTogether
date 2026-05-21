@@ -37,7 +37,15 @@ namespace SpeakTogether.Hangfire
                         await notificationService.SendToUser(
                             participant.UserId.ToString(),
                             $"Урок '{lesson.Name}' начнётся менее чем через 30 минут.\n Ссылка: {lesson.ZoomJoinUrl}.");
-                        Console.WriteLine($"--------- УВЕДОМЛЕНИЕ ВЫДАНО ПОЛЬЗОВАТЕЛЮ С ID {participant.UserId}");
+                    }
+
+                    if (lesson.CreatorId != 0)
+                    {
+                        await notificationService.SendToUser(
+                            lesson.CreatorId.ToString(),
+                            $"Ваш урок '{lesson.Name}' начнётся менее чем через 30 минут.\n Ссылка: {lesson.ZoomJoinUrl}.");
+
+                        Console.WriteLine($"--------- УВЕДОМЛЕНИЕ ВЫДАНО СОЗДАТЕЛЮ {lesson.CreatorId}");
                     }
 
                     lesson.NotificationSent = true;

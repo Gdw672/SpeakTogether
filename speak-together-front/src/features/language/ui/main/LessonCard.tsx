@@ -5,6 +5,7 @@ import type { Lesson } from "../../../Lesson/Lesson";
 import { participantApi } from "../../../participians/ParticipiantApi";
 
 export const LessonCard = ({
+
     lesson,
 }: {
     lesson: Lesson;
@@ -61,6 +62,8 @@ export const LessonCard = ({
 
     const isOwner = lesson.isOwner;
     const isEnrolled = lesson.isEnrolled;
+
+    console.log("Materials:", lesson.materials);
 
     return (
         <div style={styles.card}>

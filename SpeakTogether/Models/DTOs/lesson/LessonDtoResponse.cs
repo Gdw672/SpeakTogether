@@ -14,6 +14,7 @@ namespace SpeakTogether.Models.DTOs.lesson
         public DateTime EndDate { get; set; }
         public string ZoomStartUrl { get; set; }
         public string ZoomJoinUrl { get; set; }
+        public List<Material> Materials { get; set; }
         public bool IsEnrolled { get; set; }
         public bool IsOwner { get; set; }
     }

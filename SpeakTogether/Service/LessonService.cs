@@ -126,6 +126,7 @@ namespace SpeakTogether.Service
                     EndDate = l.EndDate,
                     ZoomStartUrl = l.ZoomStartUrl,
                     ZoomJoinUrl = l.ZoomJoinUrl,
+                    Materials = l.Materials.ToList(),
                     IsOwner = l.CreatorId == userId,
                     IsEnrolled = l.Participants.Any(p => p.UserId == userId)
                 })
