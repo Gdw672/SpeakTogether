@@ -26,9 +26,8 @@ const LEVEL_MAP: Record<string, number> = {
     C2: 5,
 };
 
-
 export const SettingsPage = () => {
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     const [skills, setSkills] = useState<{ name: string; level: string }[]>([]);
     const [preferences, setPreferences] = useState<
         { name: string; minLevel: string; maxLevel: string }[]
@@ -61,7 +60,6 @@ export const SettingsPage = () => {
         }));
 
         await chooseLanguage(payload, token);
-
     };
 
     const addPreferenceLanguage = (lang: string) => {
@@ -103,147 +101,250 @@ export const SettingsPage = () => {
         await choosePreferences(payload, token);
     };
 
-
     return (
-        <div style={styles.page}>
-            <button onClick={() => navigate("/main")} style={styles.closeBtn}>
-                ✕
-            </button>
-            <h1>Settings</h1>
+        // Внешний полноэкранный контейнер, который убирает черноту по бокам
+        <div style={styles.screenWrapper}>
+            <div style={styles.page}>
+                <button onClick={() => navigate("/main")} style={styles.closeBtn}>
+                    ✕
+                </button>
+                <h1 style={styles.title}>Settings</h1>
 
-            {}
-            <section style={styles.section}>
-                <h2>My language skills</h2>
+                {/* SKILLS */}
+                <section style={styles.section}>
+                    <h2 style={styles.sectionTitle}>My language skills</h2>
 
-                <select onChange={(e) => addSkillLanguage(e.target.value)}>
-                    <option value="">Select language</option>
-                    {LANGUAGES.map((l) => (
-                        <option key={l.name} value={l.name}>
-                            {l.flag} {l.name}
-                        </option>
-                    ))}
-                </select>
+                    <select
+                        style={styles.select}
+                        onChange={(e) => {
+                            addSkillLanguage(e.target.value);
+                            e.target.value = "";
+                        }}
+                    >
+                        <option value="">Select language</option>
+                        {LANGUAGES.map((l) => (
+                            <option key={l.name} value={l.name}>
+                                {l.flag} {l.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <div style={styles.list}>
-                    {skills.map((l, index) => (
-                        <div key={index} style={styles.row}>
-                            <span style={{ width: 120 }}>{l.name}</span>
+                    <div style={styles.list}>
+                        {skills.map((l, index) => (
+                            <div key={index} style={styles.rowCard}>
+                                <span style={styles.langName}>{l.name}</span>
 
-                            <select
-                                value={l.level}
-                                onChange={(e) =>
-                                    changeSkillLevel(index, e.target.value)
-                                }
-                            >
-                                {LEVELS.map((lvl) => (
-                                    <option key={lvl} value={lvl}>
-                                        {lvl}
-                                    </option>
-                                ))}
-                            </select>
+                                <select
+                                    style={styles.selectSmall}
+                                    value={l.level}
+                                    onChange={(e) =>
+                                        changeSkillLevel(index, e.target.value)
+                                    }
+                                >
+                                    {LEVELS.map((lvl) => (
+                                        <option key={lvl} value={lvl}>
+                                            {lvl}
+                                        </option>
+                                    ))}
+                                </select>
 
-                            <button onClick={() => removeSkill(index)}>✕</button>
-                        </div>
-                    ))}
-                </div>
+                                <button style={styles.deleteBtn} onClick={() => removeSkill(index)}>✕</button>
+                            </div>
+                        ))}
+                    </div>
 
-                <button onClick={saveSkills}>Save skills</button>
-            </section>
+                    <button style={styles.saveBtn} onClick={saveSkills}>Save skills</button>
+                </section>
 
-            <hr />
+                <hr style={styles.hr} />
 
-            {}
-            <section style={styles.section}>
-                <h2>My learning preferences</h2>
+                {/* PREFERENCES */}
+                <section style={styles.section}>
+                    <h2 style={styles.sectionTitle}>My learning preferences</h2>
 
-                <select onChange={(e) => addPreferenceLanguage(e.target.value)}>
-                    <option value="">Select language</option>
-                    {LANGUAGES.map((l) => (
-                        <option key={l.name} value={l.name}>
-                            {l.flag} {l.name}
-                        </option>
-                    ))}
-                </select>
+                    <select
+                        style={styles.select}
+                        onChange={(e) => {
+                            addPreferenceLanguage(e.target.value);
+                            e.target.value = "";
+                        }}
+                    >
+                        <option value="">Select language</option>
+                        {LANGUAGES.map((l) => (
+                            <option key={l.name} value={l.name}>
+                                {l.flag} {l.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <div style={styles.list}>
-                    {preferences.map((l, index) => (
-                        <div key={index} style={styles.row}>
-                            <span style={{ width: 120 }}>{l.name}</span>
+                    <div style={styles.list}>
+                        {preferences.map((l, index) => (
+                            <div key={index} style={styles.rowCard}>
+                                <span style={styles.langName}>{l.name}</span>
 
-                            <select
-                                value={l.minLevel}
-                                onChange={(e) =>
-                                    changeMinLevel(index, e.target.value)
-                                }
-                            >
-                                {LEVELS.map((lvl) => (
-                                    <option key={lvl} value={lvl}>
-                                        {lvl}
-                                    </option>
-                                ))}
-                            </select>
+                                <div style={styles.rangeWrapper}>
+                                    <span style={styles.rangeLabel}>from</span>
+                                    <select
+                                        style={styles.selectSmall}
+                                        value={l.minLevel}
+                                        onChange={(e) =>
+                                            changeMinLevel(index, e.target.value)
+                                        }
+                                    >
+                                        {LEVELS.map((lvl) => (
+                                            <option key={lvl} value={lvl}>
+                                                {lvl}
+                                            </option>
+                                        ))}
+                                    </select>
 
-                            <select
-                                value={l.maxLevel}
-                                onChange={(e) =>
-                                    changeMaxLevel(index, e.target.value)
-                                }
-                            >
-                                {LEVELS.map((lvl) => (
-                                    <option key={lvl} value={lvl}>
-                                        {lvl}
-                                    </option>
-                                ))}
-                            </select>
+                                    <span style={styles.rangeLabel}>to</span>
+                                    <select
+                                        style={styles.selectSmall}
+                                        value={l.maxLevel}
+                                        onChange={(e) =>
+                                            changeMaxLevel(index, e.target.value)
+                                        }
+                                    >
+                                        {LEVELS.map((lvl) => (
+                                            <option key={lvl} value={lvl}>
+                                                {lvl}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                            <button onClick={() => removePreference(index)}>
-                                ✕
-                            </button>
-                        </div>
-                    ))}
-                </div>
+                                <button style={styles.deleteBtn} onClick={() => removePreference(index)}>
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
 
-                <button onClick={savePreferences}>Save preferences</button>
-            </section>
+                    <button style={styles.saveBtn} onClick={savePreferences}>Save preferences</button>
+                </section>
+            </div>
         </div>
     );
 };
 
-
 const styles: Record<string, React.CSSProperties> = {
+    screenWrapper: {
+        width: "100%",
+        minHeight: "100vh",
+        backgroundColor: "#f8fafc", // Растягиваем светлый фон на абсолютно весь экран
+    },
     page: {
-        padding: 20,
-        maxWidth: 700,
+        padding: "40px 20px",
+        maxWidth: 600,
         margin: "0 auto",
-        fontFamily: "system-ui, sans-serif",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+        color: "#0f172a",
+    },
+    title: {
+        fontSize: "28px",
+        fontWeight: "700",
+        color: "#0f172a",
+        marginBottom: 24,
     },
     section: {
-        marginBottom: 30,
+        marginBottom: 32,
+    },
+    sectionTitle: {
+        fontSize: "18px",
+        fontWeight: "600",
+        color: "#334155",
+        marginBottom: 12,
+    },
+    select: {
+        width: "100%",
+        padding: "10px 12px",
+        border: "1px solid #cbd5e1",
+        borderRadius: 6,
+        backgroundColor: "#ffffff",
+        color: "#0f172a",
+        fontSize: 15,
+        outline: "none",
+    },
+    selectSmall: {
+        padding: "6px 10px",
+        border: "1px solid #cbd5e1",
+        borderRadius: 4,
+        backgroundColor: "#ffffff",
+        color: "#0f172a",
+        fontSize: 14,
     },
     list: {
-        marginTop: 15,
+        marginTop: 12,
+        marginBottom: 16,
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: 8,
     },
-    row: {
+    rowCard: {
         display: "flex",
-        gap: 10,
+        justifyContent: "space-between",
         alignItems: "center",
+        gap: 12,
+        padding: "10px 14px",
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 6,
+    },
+    langName: {
+        fontSize: 15,
+        fontWeight: "500",
+        color: "#0f172a",
+        flex: 1,
+    },
+    rangeWrapper: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+    },
+    rangeLabel: {
+        fontSize: 13,
+        color: "#64748b",
+    },
+    deleteBtn: {
+        background: "none",
+        border: "none",
+        color: "#94a3b8",
+        cursor: "pointer",
+        fontSize: 14,
+        padding: "4px 8px",
+    },
+    saveBtn: {
+        padding: "10px 20px",
+        background: "#0f172a",
+        color: "#ffffff",
+        border: "none",
+        borderRadius: 6,
+        cursor: "pointer",
+        fontWeight: "600",
+        backgroundColor: "#30302f",
+        fontSize: 14,
+    },
+    hr: {
+        border: "none",
+        borderTop: "1px solid #e2e8f0",
+        margin: "24px 0",
     },
     closeBtn: {
         position: "fixed",
-        top: 15,
-        right: 15,
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        border: "none",
+        top: 16,
+        right: 16,
+        width: 36,
+        height: 36,
+        borderRadius: "50%",
+        border: "1px solid #cbd5e1",
         cursor: "pointer",
-        fontSize: 20,
-        backgroundColor: "#eee",
+        fontSize: 14,
+        backgroundColor: "#ffffff",
+        color: "#334155",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        zIndex: 10,
     },
 };

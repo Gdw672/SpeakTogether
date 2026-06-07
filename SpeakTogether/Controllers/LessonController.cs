@@ -59,6 +59,17 @@ namespace SpeakTogether.Controllers
             ));
         }
 
+        [Authorize]
+        [HttpGet("get-history")]
+        public async Task<IActionResult> GetHistory()
+        {
+            var creatorId = int.Parse(
+               User.FindFirst(ClaimTypes.NameIdentifier).Value
+           );
+
+            return Ok(await lessonService.GetHistory(creatorId));
+        }
+
         [HttpDelete]
         public IActionResult DeleteLesson(int id)
         {

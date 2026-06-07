@@ -61,27 +61,44 @@ export const Schedule = () => {
             console.log("Added materials:", addedMaterials);
         }
 
+        // Обновляем список, чтобы сразу увидеть новый урок в расписании
         setLessons((prev) => [...prev, createdLesson]);
     };
 
     return (
-        <div style={{ width: 400 }}>
+        <div style={styles.container}>
             {hours.map((h) => (
-                <HourRow
-                    key={h}
-                    hour={h}
-                    lessons={lessons.filter((l) => {
-                        const hour = new Date(l.startDate)
-                            .getHours()
-                            .toString()
-                            .padStart(2, "0");
+                <div key={h} style={styles.rowWrapper}>
+                    <HourRow
+                        hour={h}
+                        lessons={lessons.filter((l) => {
+                            const hour = new Date(l.startDate)
+                                .getHours()
+                                .toString()
+                                .padStart(2, "0");
 
-                        return hour === h;
-                    })}
-                    onCreate={handleCreate}
-                    currentUserId={currentUserId}
-                />
+                            return hour === h;
+                        })}
+                        onCreate={handleCreate}
+                        currentUserId={currentUserId}
+                    />
+                </div>
             ))}
         </div>
     );
 };
+
+const styles = {
+    container: {
+        width: 400,
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 8,
+        padding: "8px 0",
+        fontFamily: "sans-serif",
+    },
+    rowWrapper: {
+        borderBottom: "1px solid #aaa",
+        padding: "4px 12px",
+    }
+} as const;

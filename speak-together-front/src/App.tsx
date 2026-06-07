@@ -5,6 +5,7 @@ import "./App.css";
 import { SelectLanguagePage } from "./pages/language/SelectLanguagePage";
 import { SelectLanguagePreferencesPage } from "./pages/language/SelectLanguagePreferencesPage";
 import { MainPage } from "./pages/main/MainPage";
+import { HistoryPage } from "./pages/history/HistoryPage";
 import { SettingsPage } from "./pages/SettingPage";
 
 
@@ -26,6 +27,8 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
 
                 <Route path="*" element={<Navigate to="/" replace />} />
+
+                <Route path="/history" element={<HistoryPage />} />
             </Routes>
         </BrowserRouter>
     );

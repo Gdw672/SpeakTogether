@@ -145,10 +145,43 @@ namespace SpeakTogether.Service
             speakTogetherDbContext.SaveChanges();
             return lessonToDelete;
         }
+
         public async Task<Lesson?> FindByIdAsync(int id)
         {
             var lessons = speakTogetherDbContext.Lessons;
             return await lessons.FirstOrDefaultAsync(lesson => lesson.Id == id);
+        }
+
+        public async Task<List<LessonDtoResponse>> GetHistory(int userId)
+        {
+            var now = DateTime.UtcNow;
+
+            var historyLessons = await speakTogetherDbContext.Lessons
+                .Include(l => l.Materials)
+                .Include(l => l.Participants)
+                .Where(l => l.EndDate < now &&
+                            (l.CreatorId == userId || l.Participants.Any(p => p.UserId == userId)))
+                .ToListAsync();
+
+            var result = historyLessons.Select(l => new LessonDtoResponse
+            {
+                Id = l.Id,
+                CreatorId = l.CreatorId,
+                Name = l.Name,
+                Description = l.Description,
+                Language = l.Language,
+                LangLevel = l.LangLevel,
+                StartDate = l.StartDate,
+                EndDate = l.EndDate,
+                ZoomStartUrl = l.ZoomStartUrl,
+                ZoomJoinUrl = l.ZoomJoinUrl,
+                Materials = l.Materials.ToList(),
+                IsOwner = l.CreatorId == userId,
+                IsEnrolled = l.Participants.Any(p => p.UserId == userId)
+            })
+            .ToList();
+
+            return result;
         }
     }
 }

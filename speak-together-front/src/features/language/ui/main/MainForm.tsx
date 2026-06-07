@@ -21,12 +21,14 @@ export const MainForm = () => {
             <Header username={username} />
 
             <div style={styles.content}>
-                <h3>Welcome to SpeakTogether</h3>
+                <h3 style={styles.title}>Welcome to SpeakTogether</h3>
 
-                <LanguageTabs
-                    value={selectedLang}
-                    onChange={setSelectedLang}
-                />
+                <div style={styles.tabsWrapper}>
+                    <LanguageTabs
+                        value={selectedLang}
+                        onChange={setSelectedLang}
+                    />
+                </div>
 
                 <Schedule selectedLang={selectedLang} />
             </div>
@@ -36,15 +38,26 @@ export const MainForm = () => {
 
 const styles = {
     container: {
-        height: "100vh",
+        minHeight: "100vh",
         width: "100%",
-        position: "relative",
-        fontFamily: "system-ui, sans-serif",
+        position: "relative" as const,
+        fontFamily: "system-ui, -apple-system, sans-serif",
+        backgroundColor: "#f8fafc", // Светлый дефолтный фон для всего приложения
+        color: "#0f172a", // Темно-серый текст вместо жесткого черного
     },
     content: {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column" as const,
         alignItems: "center",
-        paddingTop: 60,
+        paddingTop: 40,
     },
+    title: {
+        fontSize: "20px",
+        fontWeight: "600",
+        color: "#1e293b",
+        margin: "0 0 16px 0",
+    },
+    tabsWrapper: {
+        marginBottom: "16px", // Аккуратный отступ между табами и расписанием
+    }
 } as const;

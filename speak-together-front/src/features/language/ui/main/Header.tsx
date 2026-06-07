@@ -58,17 +58,15 @@ export const Header = ({ username }: { username: string }) => {
 
     return (
         <div style={styles.topRight}>
-            <div>{username}</div>
+            <div style={styles.username}>{username}</div>
 
             <div style={styles.row}>
-                {/* 🔔 NOTIFICATIONS */}
                 <div ref={wrapperRef} style={styles.notifWrapper}>
                     <div
                         style={styles.bell}
                         onClick={() => setOpen(v => !v)}
                     >
                         🔔
-
                         {notifications.length > 0 && (
                             <span style={styles.badge}>
                                 {notifications.length}
@@ -98,76 +96,94 @@ export const Header = ({ username }: { username: string }) => {
                     onClick={() => navigate("/settings")}
                 >
                     👤
-                </button>            </div>
+                </button>
+            </div>
         </div>
     );
 };
 
 const styles = {
     topRight: {
-        position: "absolute",
-        top: 20,
-        right: 20,
+        position: "absolute" as const,
+        top: 16,
+        right: 400,
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "column" as const,
         alignItems: "flex-end",
-        gap: 10,
+        gap: 6,
+        fontFamily: "system-ui, sans-serif",
+    },
+    username: {
+        fontSize: 14,
+        fontWeight: "500",
+        color: "#475569",
     },
     row: {
         display: "flex",
         alignItems: "center",
-        gap: 10,
+        gap: 12,
     },
     notifWrapper: {
-        position: "relative",
+        position: "relative" as const,
     },
     bell: {
         cursor: "pointer",
-        fontSize: 20,
-        position: "relative",
-        userSelect: "none",
+        fontSize: 18,
+        position: "relative" as const,
+        userSelect: "none" as const,
+        padding: 4,
     },
     badge: {
-        position: "absolute",
-        top: -6,
-        right: -10,
-        background: "red",
+        position: "absolute" as const,
+        top: -2,
+        right: -4,
+        background: "#3b82f6", // Спокойный синий акцент вместо агрессивного красного
         color: "white",
         borderRadius: "50%",
-        width: 18,
-        height: 18,
-        fontSize: 12,
+        width: 16,
+        height: 16,
+        fontSize: 10,
+        fontWeight: "bold",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
     },
     dropdown: {
-        position: "absolute",
-        top: 30,
+        position: "absolute" as const,
+        top: 32,
         right: 0,
-        width: 220,
-        background: "white",
-        border: "1px solid #ddd",
-        borderRadius: 8,
-        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+        width: 240,
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 6,
+        boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)",
         zIndex: 1000,
         overflow: "hidden",
     },
     item: {
-        padding: 10,
-        borderBottom: "1px solid #eee",
-        fontSize: 14,
+        padding: "10px 12px",
+        borderBottom: "1px solid #f1f5f9",
+        fontSize: 13,
+        color: "#334155",
+        backgroundColor: "#ffffff",
     },
     empty: {
-        padding: 10,
-        fontSize: 14,
-        color: "#888",
-        textAlign: "center",
+        padding: 12,
+        fontSize: 13,
+        color: "#94a3b8",
+        textAlign: "center" as const,
     },
     button: {
-        width: 40,
-        height: 40,
+        width: 32,
+        height: 32,
         borderRadius: "50%",
         cursor: "pointer",
+        border: "1px solid #cbd5e1",
+        background: "#ffffff",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 14,
+        padding: 0,
     },
 } as const;
